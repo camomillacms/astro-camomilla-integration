@@ -1,0 +1,33 @@
+---
+import Test from "../../../components/vue/Test.vue";
+import MainLayout from "astro-camomilla-integration/layouts/MainLayout.astro";
+---
+
+<MainLayout>
+  <Test client:load />
+</MainLayout>
+
+<style is:inline>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #19181b;
+    font-family: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+      "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+      "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+
+  }
+
+  h1, h2 {
+    color: #f0f0f0;
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  p {
+    color: #f0f0f0;
+    text-align: center;
+    margin-top: 20px;
+  }
+</style>

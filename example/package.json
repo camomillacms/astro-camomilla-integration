@@ -1,0 +1,31 @@
+{
+	"name": "playground",
+	"type": "module",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "astro dev",
+		"start": "astro dev",
+		"build": "astro check && astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"@astrojs/vue": "^5.0.2",
+		"@nanostores/vue": "^0.11.0",
+		"astro": "^5.0.5",
+		"@astrojs/node": "9.0.2",
+		"astro-camomilla-integration": "workspace:^",
+		"astro-integration-kit": "0.18.0",
+		"nanostores": "^0.11.3",
+		"tailwindcss": "^3.4.16",
+		"vue": "^3.5.13"
+	},
+	"devDependencies": {
+		"@astrojs/check": "^0.9.4",
+		"@nanostores/logger": "^0.4.0",
+		"@types/node": "^22.10.1",
+		"@vue/devtools-api": "^7.6.8",
+		"typescript": "^5.7.2"
+	}
+}

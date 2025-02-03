@@ -1,0 +1,26 @@
+---
+import SeoHead from "../components/SeoHead.astro";
+const seo = Astro.locals.camomilla.page;
+import { ClientRouter } from 'astro:transitions';
+
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <ClientRouter />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <slot name="seo-head-before" />
+    <slot name="seo-head">
+      <SeoHead seo={seo} />
+    </slot>
+    <slot name="seo-head-after" />
+  </head>
+  <body>
+    <slot name="header" />
+    <slot />
+    <slot name="footer" />
+  </body>
+</html>

@@ -1,0 +1,9 @@
+---
+if (!Astro.locals.camomilla?.response?.ok) {
+  Astro.response.status = Astro.locals.camomilla?.response?.status;
+}
+const Template = Astro.locals.camomilla?.Template;
+export const prerender = false;
+---
+
+{Template && <Template />}

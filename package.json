@@ -1,0 +1,16 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "example"
+  ],
+  "scripts": {
+		"example:dev": "pnpm --filter example dev",
+		"dev": "pnpm --stream -r -parallel dev"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "astro": "^5.0.5"
+  }
+}

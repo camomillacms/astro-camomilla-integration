@@ -1,0 +1,33 @@
+{
+  "name": "astro-camomilla-integration",
+  "version": "0.0.0",
+  "description": "",
+  "author": "bnznamco <gabriele.baldi.01@gmail.com>",
+  "keywords": [
+    "camomilla",
+    "astro",
+    "whithastro"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/lotrekagency/astro-camomilla-integration",
+  "exports": {
+		".": "./src/index.ts",
+    "./router-index.astro": "./src/router/index.astro",
+    "./middleware": "./src/utils/middleware.ts",
+    "./layouts/MainLayout.astro": "./src/layouts/MainLayout.astro"
+	},
+	"scripts": {
+	},
+	"type": "module",
+	"peerDependencies": {
+		"astro": "^5.1.3"
+	},
+	"devDependencies": {
+	},
+  "dependencies": {
+    "astro-integration-kit": "0.18.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
