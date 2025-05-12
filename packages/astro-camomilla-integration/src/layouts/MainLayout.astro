@@ -1,8 +1,7 @@
 ---
 import SeoHead from "../components/SeoHead.astro";
 const seo = Astro.locals.camomilla.page;
-import { ClientRouter } from 'astro:transitions';
-
+import { ClientRouter } from "astro:transitions";
 ---
 
 <!doctype html>
@@ -17,6 +16,27 @@ import { ClientRouter } from 'astro:transitions';
       <SeoHead seo={seo} />
     </slot>
     <slot name="seo-head-after" />
+    <script is:inline>
+      document.addEventListener("astro:before-swap", (event) => {
+        const DATA_ANCHOR = 'style[type="text/css"]';
+        const DATA_ASTRO_ANCHOR = "data-vite-dev-id";
+
+        const newDocument = event.newDocument;
+        const newHead = newDocument.head;
+
+        document.head.querySelectorAll(DATA_ANCHOR).forEach((oldStyle) => {
+          if (
+            ![...newHead.querySelectorAll(DATA_ANCHOR)].some(
+              (el) => el[DATA_ASTRO_ANCHOR] === oldStyle[DATA_ASTRO_ANCHOR]
+            )
+          ) {
+            const newStyle = oldStyle.cloneNode();
+            newStyle.textContent = oldStyle.textContent;
+            newHead?.appendChild(newStyle);
+          }
+        });
+      });
+    </script>
   </head>
   <body>
     <slot name="header" />
