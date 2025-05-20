@@ -6,14 +6,18 @@
     "example"
   ],
   "scripts": {
-		"example:dev": "pnpm --filter playground dev",
+    "example:dev": "pnpm --filter playground dev",
     "example:build": "pnpm --filter playground build",
     "example:start": "pnpm --filter playground start",
-		"dev": "pnpm --stream -r -parallel dev"
+    "dev": "pnpm --stream -r -parallel dev",
+    "semantic-release": "semantic-release"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^12.0.1",
     "astro": "^5.0.5",
+    "semantic-release": "^24.2.4",
     "vite": "^6.3.5"
   }
 }
