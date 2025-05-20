@@ -12,6 +12,7 @@ export default defineConfig({
     camomilla({
       server: "http://localhost:8000",
       autoRuting: true,
+      templatesIndex: "./src/templates/index.js",
     }),
     vue({ appEntrypoint: "./src/_app.js" }),
     hmrIntegration({

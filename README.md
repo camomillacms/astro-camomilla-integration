@@ -29,8 +29,9 @@ import node from "@astrojs/node";
 export default {
     integrations: [
         camomilla({
-            server: "http://localhost:8000",
-            autoRuting: true,
+            server: "http://localhost:8000", // Your Camomilla CMS server URL
+            autoRuting: true, // If enabled, the integration will automatically create routes for your pages based on the Camomilla CMS api response.
+            templatesIndex: "./src/templates/index.js", // Default is ./src/templates/index.js
         }),
     ],
     output: "server",
@@ -46,6 +47,25 @@ Remember to replace the `server` option with the URL of your Camomilla CMS serve
 
 > [!WARNING]  
 > Camomilla Integration for now it's built only for SSR mode. Remember to set the `output` option to `server` and the `adapter` option to `node`.
+
+
+## Templates
+
+The integration can automatically route templates based on the Camomilla CMS api response.
+To register a template you need to create an `index.js` file in the `src/templates` folder.
+
+```
+import MyTemplate from './mytemplate.astro'
+
+const templates = {
+  'my-template': MyTemplate
+};
+
+export default templates;
+```
+
+The template register maps the template name to the template component.
+The template name is the name of the template exposed by Camomilla CMS.
 
 
 ## Development

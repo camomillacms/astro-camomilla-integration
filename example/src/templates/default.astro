@@ -1,10 +1,10 @@
 ---
-import Test from "../../../components/vue/Test.vue";
+import Test from "../components/vue/Test.vue";
 import MainLayout from "astro-camomilla-integration/layouts/MainLayout.astro";
 ---
 
 <MainLayout>
-  <Test client:load />
+  <Test client:load title="Hello World 🌍" />
 </MainLayout>
 
 <style is:inline>
