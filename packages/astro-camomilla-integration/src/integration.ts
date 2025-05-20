@@ -28,13 +28,13 @@ export const integration = defineIntegration({
             },
           });
           addMiddleware({
-            entrypoint: "astro-camomilla-integration/middleware",
+            entrypoint: "@camomillacms/astro-integration/middleware",
             order: "pre",
           });
           if (options.autoRuting) {
             injectRoute({
               pattern: "/[...path]",
-              entrypoint: "astro-camomilla-integration/router-index.astro",
+              entrypoint: "@camomillacms/astro-integration/router-index.astro",
               prerender: false,
             });
           }

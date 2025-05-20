@@ -1,6 +1,5 @@
 packages:
   - 'example'
   - 'packages/astro-camomilla-integration'
-  - 'packages/@astro-camomilla-integration/*'
   # exclude packages that are inside test directories
   - '!**/test/**'

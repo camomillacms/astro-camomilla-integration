@@ -4,7 +4,7 @@ import { defineConfig } from "astro/config";
 import vue from "@astrojs/vue";
 import node from "@astrojs/node";
 
-const { default: camomilla } = await import("astro-camomilla-integration");
+const { default: camomilla } = await import("@camomillacms/astro-integration");
 
 // https://astro.build/config
 export default defineConfig({

@@ -15,7 +15,7 @@
 		"@nanostores/vue": "^0.11.0",
 		"astro": "^5.0.5",
 		"@astrojs/node": "9.0.2",
-		"astro-camomilla-integration": "workspace:^",
+		"@camomillacms/astro-integration": "workspace:^",
 		"astro-integration-kit": "0.18.0",
 		"nanostores": "^0.11.3",
 		"tailwindcss": "^3.4.16",

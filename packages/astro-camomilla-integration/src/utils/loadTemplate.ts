@@ -10,7 +10,7 @@ export async function loadTemplate(templateName: string | undefined) {
     return Template;
   } else {
     console.warn(`Could not load template ${templateName}`+
-      `,\nFalling back to default template astro-camomilla-integration/templates/default.astro`
+      `,\nFalling back to default template @camomillacms/astro-integration/templates/default.astro`
       );
     return DefaultTemplate;
   }
