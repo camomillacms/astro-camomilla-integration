@@ -1,4 +1,4 @@
-# astro-camomilla-integration [![npm](https://img.shields.io/npm/v/astro-camomilla-integration?style=flat-square)](https://www.npmjs.com/package/astro-camomilla-integration) [![GitHub](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/lotrekagency/astro-camomilla-integration/blob/master/LICENSE.md)
+# astro-camomilla-integration [![npm](https://img.shields.io/npm/v/astro-camomilla-integration?style=flat-square)](https://www.npmjs.com/package/astro-camomilla-integration) [![GitHub](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/camomillacms/astro-camomilla-integration/blob/master/LICENSE.md)
 
 ## Setup
 Add `astro-camomilla-integration` dependency to your project
