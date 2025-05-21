@@ -13,9 +13,10 @@
     "example:build": "pnpm --filter playground build",
     "example:start": "pnpm --filter playground start",
     "dev": "pnpm --stream -r -parallel dev",
-    "release": "semantic-release-npm-workspaces-monorepo"
+    "lerna": "lerna"
   },
   "devDependencies": {
-    "semantic-release-npm-workspaces-monorepo": "^2.2.2"
-  }
+    "lerna": "^8.2.2"
+  },
+  "dependencies": {}
 }
