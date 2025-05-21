@@ -1,53 +1,84 @@
-# astro-camomilla-integration [![npm](https://img.shields.io/npm/v/astro-camomilla-integration?style=flat-square)](https://www.npmjs.com/package/astro-camomilla-integration) [![GitHub](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/camomillacms/astro-camomilla-integration/blob/master/LICENSE.md)
+# 🌟 Astro-Camomilla Integration 🌟
 
-## Setup
-Add `astro-camomilla-integration` dependency to your project
-```sh
-yarn add --dev astro-camomilla-integration # or npm install --save-dev astro-camomilla-integration
+
+This project is an Astro integration built to be used with Camomilla CMS.
+The aim of this project is to provide a simple and easy Frontend integration to easily use Camomilla CMS as a Headless CMS. 🚀
+
+## Key Features
+
+- **Auto Routing**: Automatically create routes for your pages based on the Camomilla CMS api response.
+- **SEO Friendly**: Automatically set the title and meta tags of your pages based on the Camomilla CMS api response.
+- **SSR**: Server Side Rendering is supported out of the box.
+- **Transitions**: Compatible with Astro Transition Engine.
+- **Easy to use**: Just install the package and add the integration to your `astro.config.mjs` file.
+
+## Usage
+
+Given an Astro project you need to install this project as a dependency.
+
+```bash
+npm add @camomillacms/astro-integration
 ```
-Add astro-camomilla-integration to the modules section of nuxt.config.js
-```js
-{
-  modules: [
-    // Simple usage
-    'astro-camomilla-integration',
 
-    // With options
-    ['astro-camomilla-integration', { /* module options */ }]
-  ]
-}
+Then you need to add the integration to your `astro.config.mjs` file.
+
+```javascript
+import camomilla from '@camomillacms/astro-integration';
+import node from "@astrojs/node";
+
+export default {
+    integrations: [
+        camomilla({
+            server: "http://localhost:8000", // Your Camomilla CMS server URL
+            autoRuting: true, // If enabled, the integration will automatically create routes for your pages based on the Camomilla CMS api response.
+            templatesIndex: "./src/templates/index.js", // Default is ./src/templates/index.js
+        }),
+    ],
+    output: "server",
+    adapter: node({
+        mode: "standalone",
+    }),
+};  
+``` 
+Remember to replace the `server` option with the URL of your Camomilla CMS server.
+
+> [!NOTE]  
+> Remember to replace the `server` option with the URL of your Camomilla CMS server.
+
+> [!WARNING]  
+> Camomilla Integration for now it's built only for SSR mode. Remember to set the `output` option to `server` and the `adapter` option to `node`.
+
+
+## Templates
+
+The integration can automatically route templates based on the Camomilla CMS api response.
+To register a template you need to create an `index.js` file in the `src/templates` folder.
+
 ```
- 
- You can add options also from top level nuxt.config.js
+import MyTemplate from './mytemplate.astro'
 
-```js
-{
-  modules: [
-    'astro-camomilla-integration'
-  ],
-  mapo: {
-    /* module options */
-  }
-}
+const templates = {
+  'my-template': MyTemplate
+};
+
+export default templates;
 ```
-## Features
 
-- Exposes [`$mapo`](https://lotrekagency.github.io/mapo/core/) core sevices to provide set of utilities.
-- Injects mapo [`components`](https://lotrekagency.github.io/mapo/components/) in the default nuxt component discovery.
-- Adds meta information to router module from nuxt pages.
+The template register maps the template name to the template component.
+The template name is the name of the template exposed by Camomilla CMS.
 
-📑 &nbsp;Read more from the [documentation](https://lotrekagency.github.io/mapo/).
 
-## How to contribute
+## Development
 
-1. Clone this repository
-2. Install dependencies using `yarn bootstrap`
-3. Start development server using `yarn dev`
+To start the development server you need to run the following command:
 
-### Documenting components
-Always write some documentation regarding the components you're developing.
-Our documentation is generated directly from code thanks to [@Vuepress](https://vuepress.vuejs.org/), [@Vuese](https://vuese.org/) and [@jsdoc-to-markdown](https://github.com/jsdoc2md/jsdoc-to-markdown#readme).
+```bash
+pnpm install
+pnpm run dev
+```
 
-1. Generate doc `yarn doc:gen`
-2. Preview vuepress doc `yarn doc:dev`
+An example astro project is provided in the `example` folder.
+The dev command will start the `example` project to test the integration while developing.
 
+> [!IMPORTANT]  
+> Remember to serve a Camomilla CMS server to test the integration on default port `8000`.

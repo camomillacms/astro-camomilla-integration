@@ -17,13 +17,13 @@ The aim of this project is to provide a simple and easy Frontend integration to 
 Given an Astro project you need to install this project as a dependency.
 
 ```bash
-npm add camomilla-astro-integration
+npm add @camomillacms/astro-integration
 ```
 
 Then you need to add the integration to your `astro.config.mjs` file.
 
 ```javascript
-import camomilla from 'camomilla-astro-integration';
+import camomilla from '@camomillacms/astro-integration';
 import node from "@astrojs/node";
 
 export default {
