@@ -4,10 +4,9 @@
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
-    ["@semantic-release/npm", {
+    ["semantic-release-pnpm", {
       "pkgRoot": "packages/astro-camomilla-integration",
-      "npmPublish": true,
-      "access": "public"
+      "npmPublish": true
     }],
     ["@semantic-release/git", {
       "assets": ["packages/astro-camomilla-integration/package.json", "CHANGELOG.md"],
