@@ -1,4 +1,5 @@
 ---
+import { styles } from "virtual:camomilla-css-compiler";
 import SeoHead from "../components/SeoHead.astro";
 const seo = Astro.locals.camomilla.page;
 import { ClientRouter } from "astro:transitions";
@@ -8,6 +9,8 @@ import { ClientRouter } from "astro:transitions";
 <html lang="en">
   <head>
     <ClientRouter />
+    <style set:html={styles} type="text/css" data-vite-dev-id="global-css"
+    ></style>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,7 +30,9 @@ import { ClientRouter } from "astro:transitions";
         document.head.querySelectorAll(DATA_ANCHOR).forEach((oldStyle) => {
           if (
             ![...newHead.querySelectorAll(DATA_ANCHOR)].some(
-              (el) => el[DATA_ASTRO_ANCHOR] === oldStyle[DATA_ASTRO_ANCHOR]
+              (el) =>
+                el.getAttribute(DATA_ASTRO_ANCHOR) ===
+                oldStyle.getAttribute(DATA_ASTRO_ANCHOR)
             )
           ) {
             const newStyle = oldStyle.cloneNode();

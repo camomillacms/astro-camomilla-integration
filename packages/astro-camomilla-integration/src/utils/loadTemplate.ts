@@ -1,7 +1,6 @@
 import DefaultTemplate from '../templates/default.astro';
 import { templates } from 'virtual:camomilla-templates-map';
 
-
 export async function loadTemplate(templateName: string | undefined) {
   templateName = templateName || '';
   templateName = templateName.replace('.html', '');

@@ -1,6 +1,5 @@
 # 🌟 Astro-Camomilla Integration 🌟
 
-
 This project is an Astro integration built to be used with Camomilla CMS.
 The aim of this project is to provide a simple and easy Frontend integration to easily use Camomilla CMS as a Headless CMS. 🚀
 
@@ -23,23 +22,25 @@ npm add @camomillacms/astro-integration
 Then you need to add the integration to your `astro.config.mjs` file.
 
 ```javascript
-import camomilla from '@camomillacms/astro-integration';
+import camomilla from "@camomillacms/astro-integration";
 import node from "@astrojs/node";
 
 export default {
-    integrations: [
-        camomilla({
-            server: "http://localhost:8000", // Your Camomilla CMS server URL
-            autoRuting: true, // If enabled, the integration will automatically create routes for your pages based on the Camomilla CMS api response.
-            templatesIndex: "./src/templates/index.js", // Default is ./src/templates/index.js
-        }),
-    ],
-    output: "server",
-    adapter: node({
-        mode: "standalone",
+  integrations: [
+    camomilla({
+      server: "http://localhost:8000", // Your Camomilla CMS server URL
+      autoRuting: true, // If enabled, the integration will automatically create routes for your pages based on the Camomilla CMS api response.
+      templatesIndex: "./src/templates/index.js", // Default is ./src/templates/index.js
+      stylesIndex: "/src/styles/main.scss", // Can be undefined. Can manage only css or scss
     }),
-};  
-``` 
+  ],
+  output: "server",
+  adapter: node({
+    mode: "standalone",
+  }),
+};
+```
+
 Remember to replace the `server` option with the URL of your Camomilla CMS server.
 
 > [!NOTE]  
@@ -47,7 +48,6 @@ Remember to replace the `server` option with the URL of your Camomilla CMS serve
 
 > [!WARNING]  
 > Camomilla Integration for now it's built only for SSR mode. Remember to set the `output` option to `server` and the `adapter` option to `node`.
-
 
 ## Templates
 
@@ -67,6 +67,9 @@ export default templates;
 The template register maps the template name to the template component.
 The template name is the name of the template exposed by Camomilla CMS.
 
+## Styles
+
+To inject global styles, add main (css or scss) in stylesIndex option.
 
 ## Development
 
