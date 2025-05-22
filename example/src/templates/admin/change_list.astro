@@ -1,14 +1,12 @@
 ---
-import Test from "../components/vue/Test.vue";
-import TestReact from "../components/react/Test.jsx";
 import MainLayout from "@camomillacms/astro-integration/layouts/MainLayout.astro";
+import Test from "../../components/vue/Test.vue";
 ---
 
 <MainLayout>
   <div class="box" transition:name="box"></div>
-  <TestReact client:load />
+  <a href="/">Vai a homepage</a>
   <a href="/custom">Vai a custom</a>
-  <a href="/test">Vai a test</a>
   <Test client:load title="Hello World 🌍" />
 </MainLayout>
 
@@ -17,5 +15,6 @@ import MainLayout from "@camomillacms/astro-integration/layouts/MainLayout.astro
     width: 250px;
     height: 250px;
     background-color: red;
+    margin-left: auto;
   }
 </style>

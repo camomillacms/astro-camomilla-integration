@@ -2,6 +2,7 @@ import { defineIntegration } from "astro-integration-kit";
 import defaultOptions from "./defaults.ts";
 import { optionsSchema } from "./types/camomillaOptions.ts";
 import { vitePluginTemplateMapper } from "./vite/vite-plugin-template-mapper.ts";
+import { vitePluginCssCompiler } from "./vite/vite-pugin-css-compiler.ts";
 
 export const integration = defineIntegration({
   name: "astro-camomilla-integration",
@@ -22,7 +23,10 @@ export const integration = defineIntegration({
                   ...defaultOptions,
                 },
               },
-              plugins: [vitePluginTemplateMapper(options.templatesIndex)],
+              plugins: [
+                vitePluginTemplateMapper(options.templatesIndex),
+                vitePluginCssCompiler(options.stylesIndex),
+              ],
               build: {
                 cssCodeSplit: false,
               },
