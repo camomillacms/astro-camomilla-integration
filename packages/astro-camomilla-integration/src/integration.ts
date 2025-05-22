@@ -22,9 +22,10 @@ export const integration = defineIntegration({
                   ...defaultOptions,
                 },
               },
-              plugins: [
-                vitePluginTemplateMapper(options.templatesIndex),
-              ],
+              plugins: [vitePluginTemplateMapper(options.templatesIndex)],
+              build: {
+                cssCodeSplit: false,
+              },
             },
           });
           addMiddleware({
