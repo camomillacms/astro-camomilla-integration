@@ -52,7 +52,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          CMD="pnpm run lerna publish --conventional-commits --no-private --verify-access --yes"
+          CMD="pnpm run lerna publish --conventional-commits --no-private --yes"
           if [ "${{ github.event.inputs.force_publish }}" == "true" ]; then
             CMD="$CMD --force-publish"
           fi
