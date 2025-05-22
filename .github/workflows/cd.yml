@@ -2,6 +2,11 @@ name: 🚀 Release
 
 on:
   workflow_dispatch:
+    inputs:
+      force_publish:
+        description: 'Force Lerna to publish even if no changes are detected'
+        required: false
+        default: 'false'
 
 permissions:
   contents: read # for checkout
@@ -14,6 +19,7 @@ jobs:
       issues: write # to be able to comment on released issues
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for npm provenance
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,9 +46,15 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-  
+
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm run lerna publish --conventional-commits --no-private --verify-access --yes
+        run: |
+          CMD="pnpm run lerna publish --conventional-commits --no-private --verify-access --yes"
+          if [ "${{ github.event.inputs.force_publish }}" == "true" ]; then
+            CMD="$CMD --force-publish"
+          fi
+          echo "Running: $CMD"
+          eval $CMD
