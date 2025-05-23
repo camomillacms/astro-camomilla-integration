@@ -1,7 +1,7 @@
 export interface CamomillaPage {
     id: number;
     is_public: boolean;
-    status: string;
+    status: number;
     indexable: boolean;
     alternates: Record<string, string | null>;
     permalink: string;
@@ -37,4 +37,5 @@ export interface CamomillaPage {
         permalink: string;
         related_name: string;
     };
+    redirect: string | null;
 }

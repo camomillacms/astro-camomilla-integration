@@ -1,9 +1,10 @@
-import { defineMiddleware } from "astro/middleware";
-import { loadTemplate } from "./loadTemplate.ts";
+import type { MiddlewareNext } from "astro";
+import { sequence } from "astro/middleware";
 import type { CamomillaHandler } from "../types/camomillaHandler.ts";
 import type { CamomillaPage } from "../types/camomillaPage.ts";
+import { loadTemplate } from "./loadTemplate.ts";
 
-export const onRequest = defineMiddleware(async (context: any, next) => {
+async function middlewareCamomilla(context: any, next: MiddlewareNext) {
   if (
     context.url.pathname.match(
       /^\/(favicon\.ico|robots\.txt|manifest\.json|assets\/|.*\.(png|jpg|jpeg|gif|svg|webp|css|js|woff2?|ttf|otf|mp4|webm|txt|xml|json))$/
@@ -27,16 +28,27 @@ export const onRequest = defineMiddleware(async (context: any, next) => {
   camomilla.response = resp;
   if (resp.ok) {
     camomilla.page = await resp.json();
-    if (camomilla.page?.redirect && camomilla.page?.status == 301) {
+    if (camomilla.page?.redirect && camomilla.page.status == 301) {
       const baseUrl = context.url.href.replace(context.url.pathname, "");
       const redirectTo = `${baseUrl}${camomilla.page.redirect}`;
       return Response.redirect(redirectTo, 301);
     }
     const { template_file } = camomilla.page as CamomillaPage;
-    camomilla.Template = await loadTemplate(template_file);
+    const template = await loadTemplate(template_file);
+    camomilla.Template = {
+      default: template,
+      file: template_file,
+      url: `${serverUrl}/api/camomilla/templates/${template_file}`,
+    }
   } else {
     camomilla.error = await resp.json();
   }
   context.locals.camomilla = camomilla;
   return next();
-});
+}
+
+async function middlewareUser(context: any, next: MiddlewareNext) {
+  
+}
+
+export const onRequest = sequence(middlewareCamomilla, middlewareUser)
