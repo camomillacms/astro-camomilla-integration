@@ -1,9 +1,25 @@
-import { defineMiddleware } from "astro/middleware";
-import { loadTemplate } from "./loadTemplate.ts";
+import type { MiddlewareNext } from "astro";
+import { sequence } from "astro/middleware";
 import type { CamomillaHandler } from "../types/camomillaHandler.ts";
 import type { CamomillaPage } from "../types/camomillaPage.ts";
+import { loadTemplate } from "./loadTemplate.ts";
 
-export const onRequest = defineMiddleware(async (context: any, next) => {
+const { server } = import.meta.env.CAMOMILLA_INTEGRATION_OPTIONS;
+const serverUrl = server;
+
+async function middlewareCamomilla(context: any, next: MiddlewareNext) {
+  const camomilla: CamomillaHandler = {
+    response: null,
+    page: null,
+    Template: null,
+    user: null,
+    error: null,
+  };
+  context.locals.camomilla = camomilla;
+  return next();
+}
+
+async function middlewarePage(context: any, next: MiddlewareNext) {
   if (
     context.url.pathname.match(
       /^\/(favicon\.ico|robots\.txt|manifest\.json|assets\/|.*\.(png|jpg|jpeg|gif|svg|webp|css|js|woff2?|ttf|otf|mp4|webm|txt|xml|json))$/
@@ -11,32 +27,46 @@ export const onRequest = defineMiddleware(async (context: any, next) => {
   ) {
     return next();
   }
-  const camomilla: CamomillaHandler = {
-    response: null,
-    page: null,
-    Template: null,
-    error: null,
-  };
-  const { CAMOMILLA_INTEGRATION_OPTIONS } = import.meta.env;
-
-  const serverUrl = CAMOMILLA_INTEGRATION_OPTIONS?.server;
 
   const resp = await fetch(
     `${serverUrl}/api/camomilla/pages-router${context.url.pathname}`
   );
-  camomilla.response = resp;
+  context.locals.camomilla.response = resp;
   if (resp.ok) {
-    camomilla.page = await resp.json();
-    if (camomilla.page?.redirect && camomilla.page?.status == 301) {
+    const page = await resp.json();
+    context.locals.camomilla.page = page;
+    if (page?.redirect && page.status == 301) {
       const baseUrl = context.url.href.replace(context.url.pathname, "");
-      const redirectTo = `${baseUrl}${camomilla.page.redirect}`;
+      const redirectTo = `${baseUrl}${page.redirect}`;
       return Response.redirect(redirectTo, 301);
     }
-    const { template_file } = camomilla.page as CamomillaPage;
-    camomilla.Template = await loadTemplate(template_file);
+    const { template_file } = page as CamomillaPage;
+    const template = await loadTemplate(template_file);
+    context.locals.camomilla.Template = template
   } else {
-    camomilla.error = await resp.json();
+    context.locals.camomilla.error = await resp.json();
   }
-  context.locals.camomilla = camomilla;
   return next();
-});
+}
+
+async function middlewareUser(context: any, next: MiddlewareNext) {
+  const sessionCookie = await context.cookies.get('sessionid');
+  const csrfCookie = await context.cookies.get('csrftoken');
+
+  if (sessionCookie && csrfCookie) {
+    const resp = await fetch(
+      `${serverUrl}/api/camomilla/users/current/`,
+      {
+        headers: {
+          'Cookie': `sessionid=${sessionCookie.value}; csrftoken=${csrfCookie.value}`,
+          'X-CSRFToken': csrfCookie.value,
+        },
+        credentials: 'include',
+      }
+    );
+    if (resp.ok) context.locals.camomilla.user = await resp.json();
+  }
+  return next();
+}
+
+export const onRequest = sequence(middlewareCamomilla, middlewarePage, middlewareUser)
