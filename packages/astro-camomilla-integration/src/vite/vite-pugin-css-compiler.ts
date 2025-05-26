@@ -15,7 +15,7 @@ export function vitePluginCssCompiler(stylesIndex?: string): Plugin {
 		},
 		async load(id: string): Promise<string | undefined> {
 			if (id === resolvedVirtualModuleId) {
-				if (!stylesIndex) return undefined;
+				if (!stylesIndex) return cssCompilerMap[CssCompilerEnum.EMPTY]();
 
 				const isScss = stylesIndex.includes(".scss");
 				const isCss = stylesIndex.includes(".css");
@@ -40,7 +40,7 @@ export function vitePluginCssCompiler(stylesIndex?: string): Plugin {
 					if (resolvedCssCompilerId.id.includes(".css")) {
 						return cssCompilerMap[CssCompilerEnum.CSS](resolvedCssCompilerId.id)
 					}
-					return undefined
+					return cssCompilerMap[CssCompilerEnum.EMPTY]();
 				}
 			}
 			return undefined;
