@@ -9,8 +9,7 @@ import { ClientRouter } from "astro:transitions";
 <html lang="en">
   <head>
     <ClientRouter />
-    <style set:html={styles} type="text/css" data-vite-dev-id="global-css"
-    ></style>
+    {styles && (<style set:html={styles} type="text/css" data-vite-dev-id="global-css"></style>)}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
