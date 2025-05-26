@@ -1,4 +1,5 @@
-import { defineIntegration } from "astro-integration-kit";
+import { createResolver, defineIntegration } from "astro-integration-kit";
+import { readFileSync } from "node:fs";
 import defaultOptions from "./defaults.ts";
 import { optionsSchema } from "./types/camomillaOptions.ts";
 import { vitePluginTemplateMapper } from "./vite/vite-plugin-template-mapper.ts";
@@ -8,6 +9,7 @@ export const integration = defineIntegration({
   name: "astro-camomilla-integration",
   optionsSchema,
   setup({ options }): { hooks: any } {
+    const { resolve } = createResolver(import.meta.url)
     return {
       hooks: {
         "astro:config:setup": ({
@@ -44,6 +46,12 @@ export const integration = defineIntegration({
             });
           }
         },
+        "astro:config:done": (params: any) => {
+          params.injectTypes({
+            filename: "camomilla-integration.d.ts",
+            content: readFileSync(resolve("./env.d.ts"), 'utf8')
+          })
+        }
       },
     };
   },
