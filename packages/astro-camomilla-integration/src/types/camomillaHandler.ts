@@ -8,4 +8,5 @@ export interface CamomillaHandler {
   Template: AstroInstance["default"] | null;
   user: CamomillaUser | null;
   error: object | null;
+  template_file?: string | null;
 }

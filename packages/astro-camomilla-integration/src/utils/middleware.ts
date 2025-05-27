@@ -2,7 +2,6 @@ import type { MiddlewareNext } from "astro";
 import { sequence } from "astro/middleware";
 import type { CamomillaHandler } from "../types/camomillaHandler.ts";
 import type { CamomillaPage } from "../types/camomillaPage.ts";
-import { loadTemplate } from "./loadTemplate.ts";
 
 const { server } = import.meta.env.CAMOMILLA_INTEGRATION_OPTIONS;
 const serverUrl = server;
@@ -41,8 +40,7 @@ async function middlewarePage(context: any, next: MiddlewareNext) {
       return Response.redirect(redirectTo, 301);
     }
     const { template_file } = page as CamomillaPage;
-    const template = await loadTemplate(template_file);
-    context.locals.camomilla.Template = template
+    context.locals.camomilla.template_file = template_file;
   } else {
     context.locals.camomilla.error = await resp.json();
   }
