@@ -9,7 +9,7 @@ export async function loadTemplate(
   templateName = templateName.replace(".html", "");
   const Template = template_map[templateName];
   if (Template) {
-    return Template;
+    return Template as AstroInstance["default"];
   } else {
     console.warn(
       `Could not load template ${templateName}` +

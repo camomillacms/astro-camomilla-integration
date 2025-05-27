@@ -1,7 +1,7 @@
 export interface CamomillaPage {
     id: number;
     is_public: boolean;
-    status?: string;
+    status: number;
     indexable: boolean;
     alternates: Record<string, string | null>;
     permalink: string;
@@ -32,10 +32,10 @@ export interface CamomillaPage {
     autopermalink: boolean;
     og_image: string | null;
     parent_page: string | null;
-    redirect?: string | null;
     url_node: {
         id: number;
         permalink: string;
         related_name: string;
     };
+    redirect: string | null;
 }
