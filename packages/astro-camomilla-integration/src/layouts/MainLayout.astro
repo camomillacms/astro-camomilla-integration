@@ -9,7 +9,15 @@ import { ClientRouter } from "astro:transitions";
 <html lang="en">
   <head>
     <ClientRouter />
-    {styles && (<style set:html={styles} type="text/css" data-vite-dev-id="global-css"></style>)}
+    {
+      styles && (
+        <style
+          set:html={styles}
+          type="text/css"
+          data-vite-dev-id="global-css"
+        />
+      )
+    }
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,29 +26,6 @@ import { ClientRouter } from "astro:transitions";
       <SeoHead seo={seo} />
     </slot>
     <slot name="seo-head-after" />
-    <script is:inline>
-      document.addEventListener("astro:before-swap", (event) => {
-        const DATA_ANCHOR = 'style[type="text/css"]';
-        const DATA_ASTRO_ANCHOR = "data-vite-dev-id";
-
-        const newDocument = event.newDocument;
-        const newHead = newDocument.head;
-
-        document.head.querySelectorAll(DATA_ANCHOR).forEach((oldStyle) => {
-          if (
-            ![...newHead.querySelectorAll(DATA_ANCHOR)].some(
-              (el) =>
-                el.getAttribute(DATA_ASTRO_ANCHOR) ===
-                oldStyle.getAttribute(DATA_ASTRO_ANCHOR)
-            )
-          ) {
-            const newStyle = oldStyle.cloneNode();
-            newStyle.textContent = oldStyle.textContent;
-            newHead?.appendChild(newStyle);
-          }
-        });
-      });
-    </script>
   </head>
   <body>
     <slot name="header" />
