@@ -27,13 +27,13 @@ export const onRequest = defineMiddleware(async (context: any, next) => {
   camomilla.response = resp;
   if (resp.ok) {
     camomilla.page = await resp.json();
-    if (camomilla.page?.redirect && camomilla.page?.status == 301) {
+    if (camomilla.page?.redirect && camomilla.page?.status == "301") {
       const baseUrl = context.url.href.replace(context.url.pathname, "");
       const redirectTo = `${baseUrl}${camomilla.page.redirect}`;
       return Response.redirect(redirectTo, 301);
     }
-    const { template_file } = camomilla.page as CamomillaPage;
-    camomilla.Template = await loadTemplate(template_file);
+    const { template_file } = page as CamomillaPage;
+    context.locals.camomilla.template_file = template_file;
   } else {
     camomilla.error = await resp.json();
   }
