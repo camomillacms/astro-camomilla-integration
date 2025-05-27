@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.6](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.0.5...v0.0.6) (2025-05-27)
+
+
+### Bug Fixes
+
+* fix astro component imports ([6ef1d94](https://github.com/camomillacms/astro-camomilla-integration/commit/6ef1d943c7b0e1c24ea9b225344abef45fa7170c))
+* **main-layout:** remove workaround styles ([9a19f79](https://github.com/camomillacms/astro-camomilla-integration/commit/9a19f79d37ed6772b47294d1694c6e64351cd7f3))
+
+
+
+
+
 ## [0.0.5](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.0.4...v0.0.5) (2025-05-26)
 
 
