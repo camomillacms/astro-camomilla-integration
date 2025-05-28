@@ -13,7 +13,7 @@ export default defineConfig({
   integrations: [
     camomilla({
       server: "http://localhost:8000",
-      autoRuting: true,
+      autoRouting: true,
       templatesIndex: "./src/templates/index.js",
       stylesIndex: "src/styles/main.scss",
     }),

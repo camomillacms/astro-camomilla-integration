@@ -38,7 +38,7 @@ export const integration = defineIntegration({
             entrypoint: "@camomillacms/astro-integration/middleware",
             order: "pre",
           });
-          if (options.autoRuting) {
+          if (options.autoRouting) {
             injectRoute({
               pattern: "/[...path]",
               entrypoint: "@camomillacms/astro-integration/router-index.astro",
