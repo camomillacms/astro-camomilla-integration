@@ -30,7 +30,7 @@ export default {
     integrations: [
         camomilla({
             server: "http://localhost:8000", // Your Camomilla CMS server URL
-            autoRuting: true, // If enabled, the integration will automatically create routes for your pages based on the Camomilla CMS api response.
+            autoRouting: true, // If enabled, the integration will automatically create routes for your pages based on the Camomilla CMS api response.
             templatesIndex: "./src/templates/index.js", // Default is ./src/templates/index.js
         }),
     ],
