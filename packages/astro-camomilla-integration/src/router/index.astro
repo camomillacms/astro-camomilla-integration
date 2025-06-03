@@ -2,12 +2,18 @@
 import { templates } from "virtual:camomilla-templates-map";
 import { loadTemplate } from "../utils/loadTemplate";
 
+var Template;
+
 if (!Astro.locals.camomilla?.response?.ok) {
   Astro.response.status = Astro.locals.camomilla?.response?.status;
+  Template = await loadTemplate(
+    ["error", `${Astro.response.status}`],
+    templates
+  );
+} else {
+  const { template_file } = Astro.locals.camomilla || {};
+  Template = await loadTemplate(template_file, templates);
 }
-
-const { template_file } = Astro.locals.camomilla || {};
-const Template = await loadTemplate(template_file, templates);
 
 Astro.locals.camomilla.Template = Template;
 
