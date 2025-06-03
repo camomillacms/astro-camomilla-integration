@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.0.6...v0.1.0) (2025-06-03)
+
+
+### Bug Fixes
+
+* auto routing typo ([be43117](https://github.com/camomillacms/astro-camomilla-integration/commit/be43117af06510eaa05cb7c422007ed2ca9f1a0b))
+* reverse order of error template fetching ([ca5bd9d](https://github.com/camomillacms/astro-camomilla-integration/commit/ca5bd9d89204db03862558c553ec5ebbd874bed6))
+
+
+### Features
+
+* added error templates handling ([e408c31](https://github.com/camomillacms/astro-camomilla-integration/commit/e408c31dd3d589709a65832e4700bc9cb127747c))
+
+
+
+
+
 ## [0.0.6](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.0.5...v0.0.6) (2025-05-27)
 
 
