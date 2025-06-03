@@ -38,6 +38,10 @@ export const integration = defineIntegration({
             entrypoint: "@camomillacms/astro-integration/middleware",
             order: "pre",
           });
+          injectRoute({
+            pattern: "/api/templates",
+            entrypoint: resolve("./api/templates.ts")
+          });
           if (options.autoRouting) {
             injectRoute({
               pattern: "/[...path]",
