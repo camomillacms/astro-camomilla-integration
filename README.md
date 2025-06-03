@@ -67,6 +67,46 @@ export default templates;
 The template register maps the template name to the template component.
 The template name is the name of the template exposed by Camomilla CMS.
 
+## Error Templates
+
+By default the integration will search for `'error'` template in the `src/templates/index.js` file in case of an error coming from the Camomilla CMS API.
+Create your custom error template by adding your template in the `src/templates/index.js` file like this:
+
+```javascript
+import ErrorTemplate from './error.astro'
+const templates = {
+  ... // other templates
+  'error': ErrorTemplate
+};
+export default templates;
+```
+
+You can handle different types of errors by checking camomilla response status code in your error template like this:
+
+```javascript
+---
+const status = Astro.locals.camomilla?.response?.status // The status code of the response
+const error = Astro.locals.camomilla?.error // The error object returned by Camomilla CMS
+---
+```
+
+The integration will also search for error codes like `404`, `500`, etc. in the `src/templates/index.js` file.
+So to handle a specific error code you can create specific templates like this:
+
+```javascript
+import NotFoundTemplate from './404.astro'
+import InternalServerErrorTemplate from './500.astro'
+const templates = {
+  ... // other templates
+  '404': NotFoundTemplate,
+  '500': InternalServerErrorTemplate
+};
+export default templates;
+```
+> [!NOTE]  
+>Even if this approach is more fine-grained, it is recommended to always declare a generic `error` template to handle unexpected errors.
+
+
 ## Styles
 
 To inject global styles, add main (css or scss) in stylesIndex option.
