@@ -7,7 +7,7 @@ var Template;
 if (!Astro.locals.camomilla?.response?.ok) {
   Astro.response.status = Astro.locals.camomilla?.response?.status;
   Template = await loadTemplate(
-    ["error", `${Astro.response.status}`],
+    [`${Astro.response.status}`, "error"],
     templates
   );
 } else {
