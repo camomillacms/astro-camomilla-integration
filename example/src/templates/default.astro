@@ -1,8 +1,8 @@
 ---
-import MainLayout from "@camomillacms/astro-integration/layouts/MainLayout.astro";
-import TestReact from "../components/react/Test.jsx";
-import Test from "../components/vue/Test.vue";
-const user = Astro.locals.camomilla?.user ?? null;
+import MainLayout from '@camomillacms/astro-integration/layouts/MainLayout.astro'
+import TestReact from '../components/react/Test.jsx'
+import Test from '../components/vue/Test.vue'
+const user = Astro.locals.camomilla?.user ?? null
 ---
 
 <MainLayout>
@@ -10,10 +10,7 @@ const user = Astro.locals.camomilla?.user ?? null;
   <TestReact client:load />
   <a href="/custom">Vai a custom</a>
   <a href="/test">Vai a test</a>
-  <Test
-    client:load
-    title={user ? `Hello ${user.first_name}!` : "Hello World 🌍"}
-  />
+  <Test client:load title={user ? `Hello ${user.first_name}!` : 'Hello World 🌍'} />
 </MainLayout>
 
 <style is:inline>

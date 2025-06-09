@@ -11,7 +11,7 @@ const isAccessGranted = (user: CamomillaUser): boolean => {
 }
 
 export function GET(context: AstroSharedContext): Response {
-  if (isAccessGranted(context.locals.camomilla.user)) {
+  if (context.locals.camomilla?.user && isAccessGranted(context.locals.camomilla.user)) {
     const templateNames = Object.keys(templates)
     return new Response(JSON.stringify(templateNames))
   }

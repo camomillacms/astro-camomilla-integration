@@ -1,23 +1,15 @@
 ---
-import { styles } from "virtual:camomilla-css-compiler";
-import SeoHead from "../components/SeoHead.astro";
-const seo = Astro.locals.camomilla.page;
-import { ClientRouter } from "astro:transitions";
+import { ClientRouter } from 'astro:transitions'
+import { styles } from 'virtual:camomilla-css-compiler'
+import SeoHead from '../components/SeoHead.astro'
+const seo = Astro.locals.camomilla?.page
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <ClientRouter />
-    {
-      styles && (
-        <style
-          set:html={styles}
-          type="text/css"
-          data-vite-dev-id="global-css"
-        />
-      )
-    }
+    {styles && <style set:html={styles} type="text/css" data-vite-dev-id="global-css" />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

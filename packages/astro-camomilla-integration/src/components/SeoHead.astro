@@ -1,32 +1,33 @@
 ---
-const { seo = {} } = Astro.props;
-
+const { seo = {} } = Astro.props
 
 const computedSeo = {
   title: seo?.title,
-    description: seo?.description || seo?.og_description,
-    keywords: seo?.keywords || [],
-    ogType: seo?.og_type || "website",
-    ogTitle: seo?.og_title || seo?.title,
-    ogDescription: seo?.og_description || seo?.description,
-    ogImage: seo?.og_image,
-    ogUrl: seo?.og_url,
-    twitterCard: seo?.twitter_card || "summary_large_image",
-    twitterTitle: seo?.twitter_title || seo?.title,
-    twitterDescription: seo?.twitter_description || seo?.description || seo?.og_description,
-    twitterImage: seo?.twitter_image || seo?.og_image,
-    schemaJson: JSON.stringify(seo?.schema_json || {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": seo?.title,
-        "url": seo?.url
-    })
-};
+  description: seo?.description || seo?.og_description,
+  keywords: seo?.keywords || [],
+  ogType: seo?.og_type || 'website',
+  ogTitle: seo?.og_title || seo?.title,
+  ogDescription: seo?.og_description || seo?.description,
+  ogImage: seo?.og_image,
+  ogUrl: seo?.og_url,
+  twitterCard: seo?.twitter_card || 'summary_large_image',
+  twitterTitle: seo?.twitter_title || seo?.title,
+  twitterDescription: seo?.twitter_description || seo?.description || seo?.og_description,
+  twitterImage: seo?.twitter_image || seo?.og_image,
+  schemaJson: JSON.stringify(
+    seo?.schema_json || {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: seo?.title,
+      url: seo?.url
+    }
+  )
+}
 ---
 
 <title>{computedSeo.title}</title>
 <meta name="description" content={computedSeo.description} />
-<meta name="keywords" content={computedSeo.keywords?.join(", ")} />
+<meta name="keywords" content={computedSeo.keywords?.join(', ')} />
 <meta name="author" content="Your Name" />
 
 <!-- Open Graph / Facebook -->
@@ -43,4 +44,8 @@ const computedSeo = {
 <meta name="twitter:image" content={computedSeo.twitterImage} />
 
 <!-- Schema.org Markup for SEO -->
-{computedSeo.schemaJson && <script type="application/ld+json">{computedSeo.schemaJson}</script>}
+{
+  computedSeo.schemaJson && (
+    <script type="application/ld+json" is:inline set:html={computedSeo.schemaJson} />
+  )
+}

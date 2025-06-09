@@ -1,9 +1,9 @@
 ---
-import { ClientRouter } from "astro:transitions";
-import TestReact from "../components/react/Test";
-import Test from "../components/vue/Test.vue";
-import "../styles/main.scss";
-const user = Astro.locals.camomilla?.user ?? null;
+import { ClientRouter } from 'astro:transitions'
+import TestReact from '../components/react/Test'
+import Test from '../components/vue/Test.vue'
+import '../styles/main.scss'
+const user = Astro.locals.camomilla?.user ?? null
 ---
 
 <!-- Create a custom random html page --><!doctype html>
@@ -21,10 +21,7 @@ const user = Astro.locals.camomilla?.user ?? null;
     <a href="/test">Vai a test</a>
     <p>This is a random page</p>
     <TestReact client:load />
-    <Test
-      client:load
-      title={user ? `Hello ${user.first_name}!` : "Hello World 🌍"}
-    />
+    <Test client:load title={user ? `Hello ${user.first_name}!` : 'Hello World 🌍'} />
   </body>
 </html>
 
