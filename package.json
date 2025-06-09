@@ -9,15 +9,24 @@
     "npmRelease": true
   },
   "scripts": {
+    "lint": "eslint \"{packages,example/src,test}/**/*.{js,mjs,cjs,ts,mts,cts}\" --fix",
     "example:dev": "pnpm --filter playground dev",
     "example:build": "pnpm --filter playground build",
     "example:start": "pnpm --filter playground start",
     "dev": "pnpm --stream -r -parallel dev",
-    "lerna": "lerna"
+    "lerna": "lerna",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "lerna": "^8.2.2"
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.1",
+    "globals": "^16.2.0",
+    "husky": "^9.1.7",
+    "lerna": "^8.2.2",
+    "prettier": "3.5.3",
+    "typescript-eslint": "^8.33.1"
   },
-  "dependencies": {},
-  "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b"
+  "packageManager": "pnpm@10.12.1"
 }

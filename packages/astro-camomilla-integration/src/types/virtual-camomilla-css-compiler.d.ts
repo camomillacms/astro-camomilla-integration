@@ -1,3 +1,3 @@
-declare module "virtual:camomilla-css-compiler" {
-  export const styles: string | undefined;
+declare module 'virtual:camomilla-css-compiler' {
+  export const styles: string | undefined
 }
