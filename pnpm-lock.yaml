@@ -50,6 +50,9 @@ importers:
       vitest:
         specifier: ^3.2.2
         version: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)(jiti@1.21.7)(sass@1.89.1)(yaml@2.8.0)
+      vitest-fetch-mock:
+        specifier: ^0.4.5
+        version: 0.4.5(vitest@3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)(jiti@1.21.7)(sass@1.89.1)(yaml@2.8.0))
 
   example:
     dependencies:
@@ -4865,6 +4868,12 @@ packages:
     peerDependenciesMeta:
       vite:
         optional: true
+
+  vitest-fetch-mock@0.4.5:
+    resolution: {integrity: sha512-nhWdCQIGtaSEUVl96pMm0WggyDGPDv5FUy/Q9Hx3cs2RGmh3Q/uRsLClGbdG3kXBkJ3br5yTUjB2MeW25TwdOA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      vitest: '>=2.0.0'
 
   vitest@3.2.2:
     resolution: {integrity: sha512-fyNn/Rp016Bt5qvY0OQvIUCwW2vnaEBLxP42PmKbNIoasSYjML+8xyeADOPvBe+Xfl/ubIw4og7Lt9jflRsCNw==}
@@ -10672,6 +10681,10 @@ snapshots:
   vitefu@1.0.6(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(sass@1.89.1)(yaml@2.8.0)):
     optionalDependencies:
       vite: 6.3.5(@types/node@22.15.30)(jiti@1.21.7)(sass@1.89.1)(yaml@2.8.0)
+
+  vitest-fetch-mock@0.4.5(vitest@3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)(jiti@1.21.7)(sass@1.89.1)(yaml@2.8.0)):
+    dependencies:
+      vitest: 3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)(jiti@1.21.7)(sass@1.89.1)(yaml@2.8.0)
 
   vitest@3.2.2(@types/debug@4.1.12)(@types/node@22.15.30)(jiti@1.21.7)(sass@1.89.1)(yaml@2.8.0):
     dependencies:

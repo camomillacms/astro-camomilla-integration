@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 
 export default getViteConfig({
   test: {
+    include: ['tests/integration/**/*.test.ts'],
     coverage: {
       provider: 'v8',
       include: ["packages/astro-camomilla-integration/src/**/*.{ts,tsx}"],

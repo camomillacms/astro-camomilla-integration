@@ -33,7 +33,8 @@
     "prettier": "3.5.3",
     "prettier-plugin-astro": "^0.14.1",
     "typescript-eslint": "^8.33.1",
-    "vitest": "^3.2.2"
+    "vitest": "^3.2.2",
+    "vitest-fetch-mock": "^0.4.5"
   },
   "packageManager": "pnpm@10.12.1"
 }

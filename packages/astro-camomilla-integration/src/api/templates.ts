@@ -3,7 +3,6 @@ import { templates } from 'virtual:camomilla-templates-map'
 import type { CamomillaUser } from '../types/camomillaUser.ts'
 
 const isAccessGranted = (user: CamomillaUser): boolean => {
-  if (!user) return false
   if (!user.is_superuser) return false
   if (!user.is_staff) return false
   if (!user.is_active) return false
@@ -12,7 +11,7 @@ const isAccessGranted = (user: CamomillaUser): boolean => {
 
 export function GET(context: AstroSharedContext): Response {
   if (context.locals.camomilla?.user && isAccessGranted(context.locals.camomilla.user)) {
-    const templateNames = Object.keys(templates)
+    const templateNames = Object.keys(templates ?? {})
     return new Response(JSON.stringify(templateNames))
   }
 
