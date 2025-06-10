@@ -1,5 +1,9 @@
 packages:
-  - 'example'
-  - 'packages/astro-camomilla-integration'
-  # exclude packages that are inside test directories
+  - example
+  - packages/astro-camomilla-integration
   - '!**/test/**'
+
+onlyBuiltDependencies:
+  - cypress
+
+sideEffectsCache: false

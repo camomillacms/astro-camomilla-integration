@@ -8,7 +8,7 @@ fetchMocker.enableMocks()
 
 describe('Middleware sequence', async () => {
   it('Should handle next if request is file', async () => {
-    const ctxUnauthenticated = createMockContext(false, 'http://127.0.0.1', '/pippo.png')
+    const ctxUnauthenticated = createMockContext(false, 'http://localhost', '/pippo.png')
     const response = await onRequest(ctxUnauthenticated as any, async () => {
       return new Response('Next middleware called')
     })
@@ -18,7 +18,7 @@ describe('Middleware sequence', async () => {
   })
 
   it('Should handle unauthenticated user', async () => {
-    fetchMocker.mockIf(/^http?:\/\/127.0.0.1:8000.*$/, (req) => {
+    fetchMocker.mockIf(/^http?:\/\/localhost:8000.*$/, (req) => {
       switch (true) {
         case req.url.endsWith('/api/camomilla/pages-router/'):
           return {
@@ -27,7 +27,7 @@ describe('Middleware sequence', async () => {
           }
         case req.url.endsWith('/api/camomilla/users/current/'):
           return {
-            status: 403,
+            status: 401,
             body: JSON.stringify({ user: null, error: 'User not authenticated' })
           }
       }
@@ -43,7 +43,7 @@ describe('Middleware sequence', async () => {
   })
 
   it('Should handle authenticated user', async () => {
-    fetchMocker.mockIf(/^http?:\/\/127.0.0.1:8000.*$/, (req) => {
+    fetchMocker.mockIf(/^http?:\/\/localhost:8000.*$/, (req) => {
       switch (true) {
         case req.url.endsWith('/api/camomilla/pages-router/'):
           return {
@@ -68,7 +68,7 @@ describe('Middleware sequence', async () => {
   })
 
   it('Should handle page redirect', async () => {
-    fetchMocker.mockIf(/^http?:\/\/127.0.0.1:8000.*$/, (req) => {
+    fetchMocker.mockIf(/^http?:\/\/localhost:8000.*$/, (req) => {
       switch (true) {
         case req.url.endsWith('/api/camomilla/pages-router/'):
           return {
@@ -77,7 +77,7 @@ describe('Middleware sequence', async () => {
           }
         case req.url.endsWith('/api/camomilla/users/current/'):
           return {
-            status: 403,
+            status: 401,
             body: JSON.stringify({ user: null, error: 'User not authenticated' })
           }
       }

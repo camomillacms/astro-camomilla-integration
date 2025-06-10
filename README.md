@@ -117,6 +117,7 @@ To start the development server you need to run the following command:
 
 ```bash
 pnpm install
+pnpm cypress install
 pnpm run dev
 ```
 
@@ -125,3 +126,37 @@ The dev command will start the `example` project to test the integration while d
 
 > [!IMPORTANT]  
 > Remember to serve a Camomilla CMS server to test the integration on default port `8000`.
+
+## Test
+
+We use two primary types of tests to ensure the reliability and functionality of our application:
+
+### Integration Tests
+Integration tests, located in the /tests/integration directory and configured via vitest.config.ts, are designed to verify that different modules or services work together as expected.
+
+You can run these tests using the following command:
+```bash
+pnpm run test:integration
+```
+
+### End-to-End (E2E) Tests
+Our End-to-End tests, found in the /tests/e2e directory and configured with cypress.config.js, simulate real user scenarios to ensure the entire application flow functions correctly from start to finish.
+
+Before running E2E tests, make sure your development server is up and running. You can then execute them with:
+```bash
+pnpm run test:e2e
+```
+
+## Lint & Format
+
+Keep your codebase clean and consistent with linting and formatting!
+
+You have a couple of options:
+
+Manually run: To lint and format your code whenever you need, just run:
+
+```bash
+pnpm run lint
+```
+
+Automate with Husky: For a hassle-free experience, let Husky handle it! It's configured to automatically lint and format your code during the commit process, ensuring everything is tidy before it even hits your repository.mit

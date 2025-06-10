@@ -33,6 +33,17 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run lint
-      - run: pnpm run coverage
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Lint Code
+        run: pnpm run lint
+
+      - name: Integration Tests
+        run: pnpm run test:integration
+
+      - name: E2E Tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: pnpm run dev:e2e
+          wait-on: 'http://localhost:4321'

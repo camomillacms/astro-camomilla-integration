@@ -1,10 +1,14 @@
+import node from "@astrojs/node";
+import vue from "@astrojs/vue";
 import { createResolver } from "astro-integration-kit";
 import { hmrIntegration } from "astro-integration-kit/dev";
 import { defineConfig } from "astro/config";
-import vue from "@astrojs/vue";
-import node from "@astrojs/node";
+import { mockServer } from '../tests/e2e/mocks/node.ts';
+
 
 import react from "@astrojs/react";
+
+if (process.env.APP_ENV === 'e2e') mockServer.listen()
 
 const { default: camomilla } = await import("@camomillacms/astro-integration");
 
