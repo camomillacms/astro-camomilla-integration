@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import eslintPluginAstro from 'eslint-plugin-astro';
+import pluginCypress from 'eslint-plugin-cypress/flat';
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
@@ -13,6 +14,7 @@ export default defineConfig([
   },
   js.configs.recommended,
   eslintPluginPrettierRecommended,
+  pluginCypress.configs.recommended,
   ...tseslint.configs.recommended,
   ...eslintPluginAstro.configs.recommended,
   {
