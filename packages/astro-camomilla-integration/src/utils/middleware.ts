@@ -3,7 +3,9 @@ import { sequence } from 'astro/middleware'
 import type { CamomillaHandler } from '../types/camomillaHandler.ts'
 import type { CamomillaPage } from '../types/camomillaPage.ts'
 
-const { server } = import.meta.env.CAMOMILLA_INTEGRATION_OPTIONS
+const { server } = import.meta.env.CAMOMILLA_INTEGRATION_OPTIONS || {
+  server: 'http://127.0.0.1:8000'
+}
 const serverUrl = server
 
 async function middlewareCamomilla(context: any, next: MiddlewareNext) {

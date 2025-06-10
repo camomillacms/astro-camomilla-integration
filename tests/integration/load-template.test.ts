@@ -1,20 +1,22 @@
-import { expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { loadTemplate } from '../../packages/astro-camomilla-integration/src/utils/loadTemplate.ts'
 
-test('Load default template', async () => {
-  const template = await loadTemplate(undefined, {
-    template1: () => {},
-    template2: () => {}
+describe('Load template', async () => {
+  it('Should load default template', async () => {
+    const template = await loadTemplate(undefined, {
+      template1: () => {},
+      template2: () => {}
+    })
+    expect(typeof template).toBe('function')
+    expect(template.name).toBe('default')
   })
-  expect(typeof template).toBe('function')
-  expect(template.name).toBe('default')
-})
 
-test('Load template from available options', async () => {
-  const template = await loadTemplate('template1', {
-    template1: () => {},
-    template2: () => {}
+  it('Should load template from available options', async () => {
+    const template = await loadTemplate('template1', {
+      template1: () => {},
+      template2: () => {}
+    })
+    expect(typeof template).toBe('function')
+    expect(template.name).toBe('template1')
   })
-  expect(typeof template).toBe('function')
-  expect(template.name).toBe('template1')
 })
