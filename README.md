@@ -1,3 +1,13 @@
+
+[![NPM Version](https://img.shields.io/npm/v/%40camomillacms%2Fastro-integration?style=flat-square)](https://www.npmjs.com/package/@camomillacms/astro-integration)
+[![Build](https://img.shields.io/github/actions/workflow/status/camomillacms/astro-camomilla-integration/ci.yml?branch=master&style=flat-square)](https://github.com/camomillacms/astro-camomilla-integration/actions)
+[![Last Commit](https://img.shields.io/github/last-commit/camomillacms/astro-camomilla-integration?style=flat-square)](https://github.com/camomillacms/astro-camomilla-integration/commits/master)
+[![Contributors](https://img.shields.io/github/contributors/camomillacms/astro-camomilla-integration?style=flat-square)](https://github.com/camomillacms/astro-camomilla-integration/graphs/contributors)
+[![Open Issues](https://img.shields.io/github/issues/camomillacms/astro-camomilla-integration?style=flat-square)](https://github.com/camomillacms/astro-camomilla-integration/issues)
+[![Codecov](https://img.shields.io/codecov/c/github/camomillacms/astro-camomilla-integration?style=flat-square)](https://app.codecov.io/gh/camomillacms/astro-camomilla-integration/tree/master/camomilla)
+
+<br>
+
 # 🌟 Astro-Camomilla Integration 🌟
 
 This project is an Astro integration built to be used with Camomilla CMS.

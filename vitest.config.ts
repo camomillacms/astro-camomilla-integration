@@ -12,7 +12,8 @@ export default getViteConfig({
       ],
       thresholds: {
         100: true
-      }
+      },
+      reporter: ['text', 'json-summary', 'json'],
     },
     alias: {
       'virtual:camomilla-css-compiler': resolve('./packages/astro-camomilla-integration/src/types/virtual-camomilla-css-compiler.d.ts'),

@@ -47,3 +47,9 @@ jobs:
         with:
           start: pnpm run dev:e2e
           wait-on: 'http://localhost:4321'
+
+      - name: Upload coverage to codecov.io
+        uses: codecov/codecov-action@v5
+        if: matrix.node-version == '24.x'
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
