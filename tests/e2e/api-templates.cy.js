@@ -1,5 +1,5 @@
 describe('API template', () => {
-  it('Should fail without authentication', () => {
+  it('Should fail without user authentication', () => {
     cy.request({
       method: 'GET',
       url: '/api/templates',
@@ -10,7 +10,7 @@ describe('API template', () => {
     })
   })
 
-  it('Should expose available templates via API with authentication', () => {
+  it('Should return available templates with user authentication', () => {
     cy.request({
       method: 'GET',
       url: '/api/templates',

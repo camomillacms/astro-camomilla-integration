@@ -117,7 +117,6 @@ To start the development server you need to run the following command:
 
 ```bash
 pnpm install
-pnpm cypress install
 pnpm run dev
 ```
 
@@ -142,10 +141,18 @@ pnpm run test:integration
 ### End-to-End (E2E) Tests
 Our End-to-End tests, found in the /tests/e2e directory and configured with cypress.config.js, simulate real user scenarios to ensure the entire application flow functions correctly from start to finish.
 
-Before running E2E tests, make sure your development server is up and running. You can then execute them with:
+Before running E2E tests, make sure to start development server in e2e mode. You can then execute them with:
 ```bash
+pnpm run dev:e2e
 pnpm run test:e2e
 ```
+
+If this is your first time using Cypress with your current Node.js installation, you'll need to run a quick setup command:
+
+```bash
+pnpm cypress install
+```
+This ensures all necessary Cypress binaries are correctly installed and configured for your environment.
 
 ## Lint & Format
 
