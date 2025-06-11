@@ -12,7 +12,7 @@
     "prepare": "husky",
     "lint": "eslint \"{packages,example/src,tests}/**/*.{js,mjs,cjs,ts,mts,cts,astro}\" --fix",
     "dev:e2e": "APP_ENV=e2e pnpm run dev",
-    "test:e2e": "APP_ENV=e2e pnpm cypress run",
+    "test:e2e": "pnpm cypress run",
     "test:integration": "vitest run --coverage",
     "example:dev": "pnpm --filter playground dev",
     "example:build": "pnpm --filter playground build",
