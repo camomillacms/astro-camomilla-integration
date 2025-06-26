@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import createFetchMock from 'vitest-fetch-mock'
 import { onRequest } from '../../packages/astro-camomilla-integration/src/utils/middleware.ts'
 import { createMockContext } from './helpers/libs.ts'
+import { extractForwardedHeaders } from '../../packages/astro-camomilla-integration/src/utils/headers.ts'
 
 const fetchMocker = createFetchMock(vi)
 fetchMocker.enableMocks()
@@ -90,5 +91,15 @@ describe('Middleware sequence', async () => {
 
     if (response instanceof Response) expect(response.status).toBe(301)
     else throw new Error('Response is not an instance of Response')
+  })
+
+  it('Should extract forwarded headers', () => {
+    const ctx = createMockContext()
+    ctx.request.headers.set('X-Forwarded-Host', 'example.com')
+    ctx.request.headers.set('Referer', 'http://example.com')
+
+    const headers = extractForwardedHeaders(ctx, ['X-Forwarded-Host', 'Referer'])
+    expect(headers['X-Forwarded-Host']).toBe('example.com')
+    expect(headers['Referer']).toBe('http://example.com')
   })
 })

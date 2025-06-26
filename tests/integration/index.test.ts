@@ -6,7 +6,8 @@ test('Init astro camomilla integration', () => {
     server: 'http://localhost:8000',
     autoRouting: true,
     templatesIndex: '../../example/src/templates/index.js',
-    stylesIndex: '../../example/src/styles/main.scss'
+    stylesIndex: '../../example/src/styles/main.scss',
+    forwardedHeaders: ['X-Forwarded-Host', 'Referer']
   })
 
   expect(astroCamomillaIntegration.name).toBe('astro-camomilla-integration')

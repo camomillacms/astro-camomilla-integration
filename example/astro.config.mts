@@ -20,6 +20,7 @@ export default defineConfig({
       autoRouting: true,
       templatesIndex: "./src/templates/index.js",
       stylesIndex: "src/styles/main.scss",
+      forwardedHeaders: ["x-forwarded-host", "referer", "x-forwarded-for"],
     }),
     vue({ appEntrypoint: "./src/_app.js" }),
     hmrIntegration({

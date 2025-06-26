@@ -4,7 +4,8 @@ export const optionsSchema = z.object({
   server: z.string(),
   autoRouting: z.boolean().default(true),
   templatesIndex: z.string().default('./src/templates/index.js'),
-  stylesIndex: z.string().optional()
+  stylesIndex: z.string().optional(),
+  forwardedHeaders: z.array(z.string()).default([])
 })
 
 export type CamomillaOptions = z.infer<typeof optionsSchema>

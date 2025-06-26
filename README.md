@@ -42,6 +42,7 @@ export default {
       autoRouting: true, // If enabled, the integration will automatically create routes for your pages based on the Camomilla CMS api response.
       templatesIndex: "./src/templates/index.js", // Default is ./src/templates/index.js
       stylesIndex: "/src/styles/main.scss", // Can be undefined. Can manage only css or scss
+      forwardedHeaders: ["X-Forwarded-Host", "Referer"], // Headers to forward to the Camomilla CMS server
     }),
   ],
   output: "server",
