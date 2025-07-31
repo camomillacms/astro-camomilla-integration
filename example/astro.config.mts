@@ -21,7 +21,6 @@ export default defineConfig({
       templatesIndex: "./src/templates/index.js",
       stylesIndex: "src/styles/main.scss",
       forwardedHeaders: ["x-forwarded-host", "referer", "x-forwarded-for"],
-      cache: true
     }),
     vue({ appEntrypoint: "./src/_app.js" }),
     hmrIntegration({
