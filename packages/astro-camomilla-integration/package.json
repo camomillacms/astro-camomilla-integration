@@ -14,7 +14,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./router-index.astro": "./src/router/index.astro",
-    "./middleware": "./src/utils/middleware.ts",
+    "./middleware": "./src/middleware/index.ts",
     "./layouts/MainLayout.astro": "./src/layouts/MainLayout.astro"
   },
   "scripts": {},
@@ -26,7 +26,12 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
+    "@keyv/memcache": "^2.0.2",
+    "@keyv/redis": "^5.0.0",
+    "@keyv/valkey": "^1.0.7",
     "astro-integration-kit": "0.18.0",
+    "cacheable": "^1.10.3",
+    "keyv": "^5.4.0",
     "sass": "^1.89.0"
   },
   "publishConfig": {

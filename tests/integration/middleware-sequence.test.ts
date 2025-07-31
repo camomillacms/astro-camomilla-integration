@@ -1,8 +1,16 @@
 import { describe, expect, it, vi } from 'vitest'
-import createFetchMock from 'vitest-fetch-mock'
-import { onRequest } from '../../packages/astro-camomilla-integration/src/utils/middleware.ts'
 import { createMockContext } from './helpers/libs.ts'
+import createFetchMock from 'vitest-fetch-mock'
 import { extractForwardedHeaders } from '../../packages/astro-camomilla-integration/src/utils/headers.ts'
+
+// Mock the getIntegrationOptions before importing the middleware
+vi.mock('../../packages/astro-camomilla-integration/src/utils/getIntegrationOptions', () => ({
+  getIntegrationOptions: vi.fn(() => ({
+    server: 'http://localhost:8000'
+  }))
+}))
+
+import { onRequest } from '../../packages/astro-camomilla-integration/src/middleware/index.ts'
 
 const fetchMocker = createFetchMock(vi)
 fetchMocker.enableMocks()
