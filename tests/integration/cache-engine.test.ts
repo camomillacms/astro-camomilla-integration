@@ -8,7 +8,7 @@ import {
 describe('Cache engine', async () => {
   it('Should create a cache engine with default config', async () => {
     resetCacheEngine()
-    const cacheEngine = getCacheEngine(true)
+    const cacheEngine = getCacheEngine({})
     expect(cacheEngine).toBeDefined()
   })
   it('Should create a cache engine with Redis config', async () => {

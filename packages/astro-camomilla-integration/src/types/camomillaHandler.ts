@@ -9,4 +9,5 @@ export interface CamomillaHandler {
   user: CamomillaUser | null
   error: object | null
   template_file?: string | null
+  cache: (seconds: number | 'NEVER_CACHE') => void
 }

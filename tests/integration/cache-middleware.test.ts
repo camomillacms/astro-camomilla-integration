@@ -18,11 +18,11 @@ import {
   getCacheEngine,
   buildCacheKey
 } from '../../packages/astro-camomilla-integration/src/utils/cacheEngine'
-import { getIntegrationOptions } from '../../packages/astro-camomilla-integration/src/utils/getIntegrationOptions'
 
 describe('Cache middleware', async () => {
   it('Should return response if not cached', async () => {
     const ctx = {
+      locals: { camomilla: {} },
       url: new URL('http://localhost/test'),
       request: new Request('http://localhost/test', { headers: { 'User-Agent': 'test-agent' } })
     } as any
@@ -44,6 +44,7 @@ describe('Cache middleware', async () => {
   })
   it('Should return cached response if available', async () => {
     const ctx = {
+      locals: { camomilla: {} },
       url: new URL('http://localhost/test'),
       request: new Request('http://localhost/test', { headers: { 'User-Agent': 'test-agent' } })
     } as any
@@ -55,7 +56,7 @@ describe('Cache middleware', async () => {
       })
     }
 
-    const cacheEngine = getCacheEngine(getIntegrationOptions().cache)
+    const cacheEngine = getCacheEngine({ backend: 'memory' })
     const cacheKey = buildCacheKey(ctx, { varyOnHeaders: ['User-Agent'] })
     await cacheEngine.set(cacheKey, {
       status: 200,
@@ -73,6 +74,7 @@ describe('Cache middleware', async () => {
   })
   it('Should not hit cache if varyOnHeaders are different', async () => {
     const ctx = {
+      locals: { camomilla: {} },
       url: new URL('http://localhost/test'),
       request: new Request('http://localhost/test', { headers: { 'User-Agent': 'test-agent' } })
     } as any
@@ -84,7 +86,7 @@ describe('Cache middleware', async () => {
       })
     }
 
-    const cacheEngine = getCacheEngine(getIntegrationOptions().cache)
+    const cacheEngine = getCacheEngine({ backend: 'memory' })
     const cacheKey = buildCacheKey(ctx, { varyOnHeaders: ['User-Agent'] })
     await cacheEngine.set(cacheKey, {
       status: 200,
@@ -102,5 +104,22 @@ describe('Cache middleware', async () => {
     } else {
       throw new Error('Response is not an instance of Response')
     }
+  })
+  it('Should define locals set cache function', async () => {
+    const ctx = {
+      locals: { camomilla: {} },
+      url: new URL('http://localhost/test'),
+      request: new Request('http://localhost/test', { headers: { 'User-Agent': 'test-agent' } })
+    } as any
+
+    const next = async () => {
+      return new Response('Response from next middleware', {
+        status: 200,
+        headers: { 'Content-Type': 'text/plain' }
+      })
+    }
+    await middlewareCache(ctx, next)
+    expect(ctx.locals.camomilla.cache).toBeDefined()
+    expect(ctx.locals.camomilla.cache(60)).toBeUndefined()
   })
 })

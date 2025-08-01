@@ -18,8 +18,8 @@ async function middlewareCamomilla(context: APIContext, next: MiddlewareNext) {
 }
 
 export const onRequest = sequence(
-  middlewareCache,
   middlewareCamomilla,
+  middlewareCache,
   middlewarePage,
   middlewareUser
 )

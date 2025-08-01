@@ -16,7 +16,7 @@ export const optionsSchema = z.object({
   templatesIndex: z.string().default('./src/templates/index.js'),
   stylesIndex: z.string().optional(),
   forwardedHeaders: z.array(z.string()).default([]),
-  cache: z.union([z.boolean(), cacheSchema]).default(false),
+  cache: cacheSchema.partial().optional(),
   debug: z.boolean().default(false)
 })
 

@@ -16,6 +16,12 @@ export const middlewareCache: MiddlewareHandler = async (
     return next()
   }
 
+  let ttl: number | string | undefined
+
+  context.locals.camomilla.cache = (seconds: number | 'NEVER_CACHE') => {
+    ttl = seconds
+  }
+
   const cacheEngine = getCacheEngine(cacheConfig)
 
   const cacheKey = buildCacheKey(context, cacheConfig)
@@ -28,7 +34,13 @@ export const middlewareCache: MiddlewareHandler = async (
 
   const response = await next()
 
-  await cacheEngine.set<CachedResponseData>(cacheKey, await serializeResponse(response.clone()))
+  if (ttl !== 'NEVER_CACHE') {
+    await cacheEngine.set<CachedResponseData>(
+      cacheKey,
+      await serializeResponse(response.clone()),
+      ttl || undefined
+    )
+  }
 
   return response
 }

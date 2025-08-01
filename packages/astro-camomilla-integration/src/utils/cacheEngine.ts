@@ -8,13 +8,13 @@ import Keyv from 'keyv'
 
 let __cacheEngine: Cacheable | null = null
 
-export function getCacheEngine(config: CacheConfig | boolean): Cacheable {
+export function getCacheEngine(config: Partial<CacheConfig>): Cacheable {
   const cacheConfig: CacheConfig = {
-    backend: (typeof config == 'object' && config.backend) || 'memory',
-    location: (typeof config == 'object' && config.location) || undefined,
-    ttl: (typeof config == 'object' && config.ttl) || '1h',
-    keyPrefix: (typeof config == 'object' && config.keyPrefix) || 'astro-camomilla-cache',
-    varyOnHeaders: (typeof config == 'object' && config.varyOnHeaders) || []
+    backend: config.backend || 'memory',
+    location: config.location || undefined,
+    ttl: config.ttl || '1h',
+    keyPrefix: config.keyPrefix || 'astro-camomilla-cache',
+    varyOnHeaders: config.varyOnHeaders || []
   }
 
   if (__cacheEngine) {
