@@ -4,14 +4,7 @@ const template_file = Astro.locals.camomilla?.page?.template_file
 const pageData = Astro.locals.camomilla?.page
 const status = Astro.locals.camomilla?.response?.status || 400
 const pageError = Astro.locals.camomilla?.error
-const error =
-  {
-    200: 'Template Not Found',
-    404: 'Page Not Found',
-    500: 'Internal Server Error',
-    400: 'Bad Request',
-    403: 'Forbidden'
-  }[status as number] || 'Unknown Error'
+const error = Astro.locals.camomilla?.response?.statusText || 'Unknown Error'
 ---
 
 <MainLayout>

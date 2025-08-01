@@ -57,7 +57,7 @@ describe('Middleware sequence', async () => {
         case req.url.endsWith('/api/camomilla/pages-router/'):
           return {
             status: 200,
-            body: JSON.stringify({})
+            body: JSON.stringify({ is_public: true })
           }
         case req.url.endsWith('/api/camomilla/users/current/'):
           return {
@@ -109,5 +109,54 @@ describe('Middleware sequence', async () => {
     const headers = extractForwardedHeaders(ctx, ['X-Forwarded-Host', 'Referer'])
     expect(headers['X-Forwarded-Host']).toBe('example.com')
     expect(headers['Referer']).toBe('http://example.com')
+  })
+  it('Should handle draft pages', async () => {
+    fetchMocker.mockIf(/^http?:\/\/localhost:8000.*$/, (req) => {
+      switch (true) {
+        case req.url.endsWith('/api/camomilla/pages-router/'):
+          return {
+            status: 200,
+            body: JSON.stringify({ is_public: false })
+          }
+        case req.url.endsWith('/api/camomilla/users/current/'):
+          return {
+            status: 401,
+            body: JSON.stringify({ user: {} })
+          }
+      }
+    })
+
+    const ctxAuthenticated = createMockContext(true)
+    const response = await onRequest(ctxAuthenticated as any, async () => {
+      return new Response('Next middleware called')
+    })
+    if (response instanceof Response)
+      expect(ctxAuthenticated.locals.camomilla?.response?.status).toBe(404)
+    else throw new Error('Response is not an instance of Response')
+  })
+  it('Should handle preview draft pages', async () => {
+    fetchMocker.mockIf(/^http?:\/\/localhost:8000.*$/, (req) => {
+      switch (true) {
+        case req.url.endsWith('/api/camomilla/pages-router/'):
+          return {
+            status: 200,
+            body: JSON.stringify({ is_public: false })
+          }
+        case req.url.endsWith('/api/camomilla/users/current/'):
+          return {
+            status: 401,
+            body: JSON.stringify({ user: {} })
+          }
+      }
+    })
+
+    const ctxAuthenticated = createMockContext(true)
+    ctxAuthenticated.url.searchParams.set('preview', 'true')
+    const response = await onRequest(ctxAuthenticated as any, async () => {
+      return new Response('Next middleware called')
+    })
+    if (response instanceof Response)
+      expect(ctxAuthenticated.locals.camomilla?.response?.status).toBe(200)
+    else throw new Error('Response is not an instance of Response')
   })
 })

@@ -34,8 +34,18 @@ export const middlewarePage: MiddlewareHandler = async (
       const redirectTo = `${baseUrl}${page.redirect}`
       return Response.redirect(redirectTo, 301)
     }
-    const { template_file } = page as CamomillaPage
-    context.locals.camomilla.template_file = template_file
+    const preview = context.url.searchParams?.get('preview')
+
+    if (page.is_public || preview === 'true') {
+      const { template_file } = page as CamomillaPage
+      context.locals.camomilla.template_file = template_file
+    } else {
+      context.locals.camomilla.response = new Response(page, {
+        status: 404,
+        statusText: 'Not Public',
+        headers: resp.headers
+      })
+    }
   } else {
     context.locals.camomilla.error = await resp.json()
   }

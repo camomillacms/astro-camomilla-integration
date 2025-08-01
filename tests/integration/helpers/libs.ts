@@ -20,8 +20,10 @@ export function createMockContext(
     cookies,
     url: {
       href,
-      pathname
+      pathname,
+      searchParams: new URLSearchParams()
     },
-    locals: {}
+    locals: { camomilla: { response: { status: undefined } } },
+    response: {}
   }
 }
