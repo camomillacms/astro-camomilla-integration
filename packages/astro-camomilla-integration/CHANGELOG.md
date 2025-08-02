@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.2.0...v0.3.0) (2025-08-02)
+
+### Features
+
+- added cache system per page with camomilla.cache method ([938e405](https://github.com/camomillacms/astro-camomilla-integration/commit/938e405268b0eba6c9c010a46f6560f00603682e))
+- added cache system to improve rendering performances 🚀 ([#12](https://github.com/camomillacms/astro-camomilla-integration/issues/12)) ([d3cf89f](https://github.com/camomillacms/astro-camomilla-integration/commit/d3cf89f72330cd462ec41cd58fdd9b1d0999bc61))
+- added is public check to page middleware ([92325e0](https://github.com/camomillacms/astro-camomilla-integration/commit/92325e05e93379b1526281157ece4d34ecb9f950))
+
 # [0.2.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.1.0...v0.2.0) (2025-06-26)
 
 ### Features
