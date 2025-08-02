@@ -1,13 +1,6 @@
 import type { AstroSharedContext } from 'astro'
 import { templates } from 'virtual:camomilla-templates-map'
-import type { CamomillaUser } from '../types/camomillaUser.ts'
-
-const isAccessGranted = (user: CamomillaUser): boolean => {
-  if (!user.is_superuser) return false
-  if (!user.is_staff) return false
-  if (!user.is_active) return false
-  return true
-}
+import { isAccessGranted } from '../utils/permissions.ts'
 
 export function GET(context: AstroSharedContext): Response {
   if (context.locals.camomilla?.user && isAccessGranted(context.locals.camomilla.user)) {

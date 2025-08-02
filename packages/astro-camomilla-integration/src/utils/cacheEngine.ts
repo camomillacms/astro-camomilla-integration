@@ -73,5 +73,5 @@ export function buildCacheKey(context: APIContext, cacheConfig: Partial<CacheCon
     .filter(([key]) => validHeaders.includes(key.toLowerCase()))
     .map(([key, value]) => `|${key}:${value}`)
     .join('')
-  return `${context.url.href}${headerString}`
+  return `${context.url.href}${headerString}`.replace(/\s+/g, '')
 }

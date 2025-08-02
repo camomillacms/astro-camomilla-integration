@@ -115,7 +115,7 @@ describe('Cache engine', async () => {
       'http://localhost/test|user-agent:test-agent'
     )
     expect(buildCacheKey(ctx, { varyOnHeaders: ['Cookie', 'User-Agent'] })).toBe(
-      'http://localhost/test|cookie:session=abc123; other=def456;|user-agent:test-agent'
+      'http://localhost/test|cookie:session=abc123;other=def456;|user-agent:test-agent'
     )
     expect(buildCacheKey(ctx, { varyOnHeaders: [] })).toBe('http://localhost/test')
     expect(buildCacheKey(ctx, { varyOnHeaders: ['Accept'] })).toBe('http://localhost/test')

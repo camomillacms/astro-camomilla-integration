@@ -35,6 +35,10 @@ export const integration = defineIntegration({
             order: 'pre'
           })
           injectRoute({
+            pattern: '/api/cache-flush',
+            entrypoint: resolve('./api/cacheFlush.ts')
+          })
+          injectRoute({
             pattern: '/api/templates',
             entrypoint: resolve('./api/templates.ts')
           })
