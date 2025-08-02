@@ -1,4 +1,3 @@
-
 [![NPM Version](https://img.shields.io/npm/v/%40camomillacms%2Fastro-integration?style=flat-square)](https://www.npmjs.com/package/@camomillacms/astro-integration)
 [![Build](https://img.shields.io/github/actions/workflow/status/camomillacms/astro-camomilla-integration/ci.yml?branch=master&style=flat-square)](https://github.com/camomillacms/astro-camomilla-integration/actions)
 [![Last Commit](https://img.shields.io/github/last-commit/camomillacms/astro-camomilla-integration?style=flat-square)](https://github.com/camomillacms/astro-camomilla-integration/commits/master)
@@ -42,7 +41,14 @@ export default {
       autoRouting: true, // If enabled, the integration will automatically create routes for your pages based on the Camomilla CMS api response.
       templatesIndex: "./src/templates/index.js", // Default is ./src/templates/index.js
       stylesIndex: "/src/styles/main.scss", // Can be undefined. Can manage only css or scss
-      forwardedHeaders: ["X-Forwarded-Host", "Referer"], // Headers to forward to the Camomilla CMS server
+      forwardedHeaders: ["X-Forwarded-Host", "X-Forwarded-Proto"], // Headers to forward to the Camomilla CMS server
+      cache: { // Cache configuration disabled by default
+        backend: "redis", // Can be 'memory', 'redis', 'valkey', 'memcache'
+        location: "redis://user:pass@localhost:6379", // Location of the cache server, can be a URL or a path
+        ttl: 60 * 60 * 1000 // Time to live in milliseconds or s, m, h (e.g. "1h" for 1 hour)
+        keyPrefix: "astro-camomilla-integration" // Prefix for the cache keys
+        varyOnHeaders: ["Cookie", "User-Agent"] // Headers to vary the cache on
+      }
     }),
   ],
   output: "server",
@@ -114,13 +120,60 @@ const templates = {
 };
 export default templates;
 ```
-> [!NOTE]  
->Even if this approach is more fine-grained, it is recommended to always declare a generic `error` template to handle unexpected errors.
 
+> [!NOTE]  
+> Even if this approach is more fine-grained, it is recommended to always declare a generic `error` template to handle unexpected errors.
+
+## Draft Pages
+
+This integration will check for the `is_public` field in the Camomilla CMS response to determine if a page is a draft or not.
+If the `is_public` field is set to `false`, the integration will return a `404` status code. If you need to access draft pages, you can add `?preview=true` to the URL.
+
+## Forwarded Headers
+
+The integration supports forwarding headers to the Camomilla CMS server.
+You can configure the headers to forward in the `astro.config.mjs` file by setting the `forwardedHeaders` option.
+
+> [!NOTE]
+> We suggest to forward the `X-Forwarded-Host` and `X-Forwarded-Proto` headers to the Camomilla CMS server to ensure that the correct host and protocol are used in the API responses.
 
 ## Styles
 
 To inject global styles, add main (css or scss) in stylesIndex option.
+
+## Cache
+
+The integration supports caching of the entire Astro response.
+You can configure the cache in the `astro.config.mjs` file by setting the `cache` option.
+
+```javascript
+export default {
+  integrations: [
+    camomilla({
+      cache: {
+        backend: 'redis', // Can be 'memory', 'redis', 'valkey',
+        location: 'redis://user:pass@localhost:6379', // Location of the cache server, can be a URL or a path
+        ttl: 60 * 60 * 1000, // Time to live in milliseconds or s, m, h (e.g. "1h" for 1 hour)
+        keyPrefix: 'astro-camomilla-integration', // Prefix for the cache keys
+        varyOnHeaders: ['Cookie', 'User-Agent'] // Headers to vary the cache on
+      }
+    })
+  ]
+}
+```
+
+The cache can be configured to use different backends like `memory`, `redis`, `valkey`, or `memcache`.
+The `location` option is the location of the cache server, it can be a URL or a path.
+The `ttl` option is the time to live of the cache in milliseconds or a string like `1h` for 1 hour.
+
+### Vary on Headers
+
+The cache can be configured to vary on specific headers.
+This means that the cache will store different responses based on the values of these headers.
+For example, if you set `varyOnHeaders: ["Cookie", "User-Agent"]`, the cache will store different responses for different cookies and user agents.
+
+> [!NOTE]
+> The `varyOnHeaders` option is useful to cache different responses for different users, for example, to cache the response for authenticated and unauthenticated users separately.
 
 ## Development
 
@@ -142,17 +195,21 @@ The dev command will start the `example` project to test the integration while d
 We use two primary types of tests to ensure the reliability and functionality of our application:
 
 ### Integration Tests
+
 Integration tests, located in the /tests/integration directory and configured via vitest.config.ts, are designed to verify that different modules or services work together as expected.
 
 You can run these tests using the following command:
+
 ```bash
 pnpm run test:integration
 ```
 
 ### End-to-End (E2E) Tests
+
 Our End-to-End tests, found in the /tests/e2e directory and configured with cypress.config.js, simulate real user scenarios to ensure the entire application flow functions correctly from start to finish.
 
 Before running E2E tests, make sure to start development server in e2e mode. You can then execute them with:
+
 ```bash
 pnpm run dev:e2e
 pnpm run test:e2e
@@ -163,6 +220,7 @@ If this is your first time using Cypress with your current Node.js installation,
 ```bash
 pnpm cypress install
 ```
+
 This ensures all necessary Cypress binaries are correctly installed and configured for your environment.
 
 ## Lint & Format
