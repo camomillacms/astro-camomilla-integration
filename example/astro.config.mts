@@ -21,7 +21,7 @@ export default defineConfig({
       templatesIndex: "./src/templates/index.js",
       stylesIndex: "src/styles/main.scss",
       forwardedHeaders: ["x-forwarded-host", "referer", "x-forwarded-for"],
-      cache: { backend: "memory", varyOnHeaders: ["Cookie"] }
+      cache: process.env.APP_ENV === 'e2e' ? { backend: "memory", varyOnHeaders: ["Cookie"] } : undefined
     }),
     vue({ appEntrypoint: "./src/_app.js" }),
     hmrIntegration({

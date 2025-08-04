@@ -10,6 +10,7 @@ const computedSeo = {
   ogDescription: seo?.og_description || seo?.description,
   ogImage: seo?.og_image,
   ogUrl: seo?.og_url,
+  canonicalUrl: seo?.canonical || seo?.routerlink,
   twitterCard: seo?.twitter_card || 'summary_large_image',
   twitterTitle: seo?.twitter_title || seo?.title,
   twitterDescription: seo?.twitter_description || seo?.description || seo?.og_description,
@@ -26,6 +27,7 @@ const computedSeo = {
 ---
 
 <title>{computedSeo.title}</title>
+<link rel="canonical" href={computedSeo.canonicalUrl} />
 <meta name="description" content={computedSeo.description} />
 <meta name="keywords" content={computedSeo.keywords?.join(', ')} />
 <meta name="author" content="Your Name" />
