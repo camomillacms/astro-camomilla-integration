@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.3.0...v0.4.0) (2025-08-04)
+
+### Bug Fixes
+
+- added missing canonical to seo head ([268cc8e](https://github.com/camomillacms/astro-camomilla-integration/commit/268cc8efe0956e3cbf74f152a416fe78e652f121))
+- remove author default ([e0788f4](https://github.com/camomillacms/astro-camomilla-integration/commit/e0788f4a69def9c63b219b82d5ad508dc65ee12b))
+
+### Features
+
+- added cache flush endpoint to manage cache from camomilla cms ([ad7e73c](https://github.com/camomillacms/astro-camomilla-integration/commit/ad7e73cb191a771b4504d45acf8898385fcdde45))
+
 # [0.3.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.2.0...v0.3.0) (2025-08-02)
 
 ### Features
