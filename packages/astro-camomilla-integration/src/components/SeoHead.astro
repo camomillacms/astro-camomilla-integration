@@ -8,13 +8,13 @@ const computedSeo = {
   ogType: seo?.og_type || 'website',
   ogTitle: seo?.og_title || seo?.title,
   ogDescription: seo?.og_description || seo?.description,
-  ogImage: seo?.og_image,
+  ogImage: seo?.og_image?.file,
   ogUrl: seo?.og_url,
   canonicalUrl: seo?.canonical || Astro.request.url,
   twitterCard: seo?.twitter_card || 'summary_large_image',
   twitterTitle: seo?.twitter_title || seo?.title,
   twitterDescription: seo?.twitter_description || seo?.description || seo?.og_description,
-  twitterImage: seo?.twitter_image || seo?.og_image,
+  twitterImage: seo?.twitter_image?.file || seo?.og_image?.file,
   schemaJson: JSON.stringify(
     seo?.schema_json || {
       '@context': 'https://schema.org',
