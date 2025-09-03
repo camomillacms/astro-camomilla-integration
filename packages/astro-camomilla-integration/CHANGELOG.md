@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.3](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.2...v0.4.3) (2025-09-01)
+
+### Bug Fixes
+
+- added favicon.ico ([147c248](https://github.com/camomillacms/astro-camomilla-integration/commit/147c248cdc8ab86e45840da1c31d9f2963acb2e6))
+- added favicon.ico ([ee63085](https://github.com/camomillacms/astro-camomilla-integration/commit/ee630857d98afd1e022dd2df1d3204ca5c7fd485))
+
 ## [0.4.2](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.1...v0.4.2) (2025-08-20)
 
 **Note:** Version bump only for package @camomillacms/astro-integration
