@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.3...v0.4.4) (2025-09-03)
+
+### Bug Fixes
+
+- remove versioning in favicon ([9780813](https://github.com/camomillacms/astro-camomilla-integration/commit/978081312e1a5303862b4d9a85a4e6e9aa4f013e))
+
 ## [0.4.3](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.2...v0.4.3) (2025-09-01)
 
 ### Bug Fixes
