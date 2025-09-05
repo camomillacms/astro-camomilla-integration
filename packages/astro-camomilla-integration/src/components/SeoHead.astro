@@ -4,7 +4,7 @@ const { seo = {} } = Astro.props
 const computedSeo = {
   title: seo?.title,
   description: seo?.description || seo?.og_description,
-  keywords: seo?.keywords || [],
+  keywords: seo?.keywords,
   ogType: seo?.og_type || 'website',
   ogTitle: seo?.og_title || seo?.title,
   ogDescription: seo?.og_description || seo?.description,
@@ -29,7 +29,7 @@ const computedSeo = {
 <title>{computedSeo.title}</title>
 <link rel="canonical" href={computedSeo.canonicalUrl} />
 <meta name="description" content={computedSeo.description} />
-<meta name="keywords" content={computedSeo.keywords?.join(', ')} />
+{computedSeo.keywords && (<meta name="keywords" content={computedSeo.keywords} />) }
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={computedSeo.ogType} />
