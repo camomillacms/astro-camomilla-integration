@@ -159,4 +159,26 @@ describe('Middleware sequence', async () => {
       expect(ctxAuthenticated.locals.camomilla?.response?.status).toBe(200)
     else throw new Error('Response is not an instance of Response')
   })
+  it('Should handle error responses 500', async () => {
+    fetchMocker.mockIf(/^http?:\/\/localhost:8000.*$/, (req) => {
+      switch (true) {
+        case req.url.endsWith('/api/camomilla/pages-router/'):
+          return {
+            status: 500,
+            body: 'Internal Server Error'
+          }
+        case req.url.endsWith('/api/camomilla/users/current/'):
+          return {
+            status: 500,
+            body: 'Internal Server Error'
+          }
+      }
+    })
+    const ctx = createMockContext()
+    const response = await onRequest(ctx as any, async () => {
+      return new Response('Next middleware called')
+    })
+    if (response instanceof Response) expect(ctx.locals.camomilla?.response?.status).toBe(500)
+    else throw new Error('Response is not an instance of Response')
+  })
 })
