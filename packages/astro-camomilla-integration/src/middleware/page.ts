@@ -1,7 +1,7 @@
-import type { APIContext, MiddlewareHandler, MiddlewareNext } from 'astro'
+import type { MiddlewareHandler, APIContext, MiddlewareNext } from 'astro'
+import { extractForwardedHeaders } from '../utils/headers.ts'
 import type { CamomillaPage } from '../types/camomillaPage.ts'
 import { getIntegrationOptions } from '../utils/getIntegrationOptions.ts'
-import { extractForwardedHeaders } from '../utils/headers.ts'
 
 /**
  * Middleware to handle page-related requests in the Camomilla integration.
@@ -21,33 +21,19 @@ export const middlewarePage: MiddlewareHandler = async (
     return next()
   }
 
-  try {
-    const response = await fetch(`${serverUrl}/api/camomilla/pages-router${context.url.pathname}`, {
-      headers: extractForwardedHeaders(context, forwardedHeaders)
-    })
+  const resp = await fetch(`${serverUrl}/api/camomilla/pages-router${context.url.pathname}`, {
+    headers: extractForwardedHeaders(context, forwardedHeaders)
+  })
 
-    if (!response.ok) {
-      throw new Error(`Camomilla response status: ${response.status}`)
-    }
-
-    context.locals.camomilla.response = response
-
-    let page
-
-    try {
-      page = await response.json()
-    } catch {
-      throw new Error('Camomilla response is not json')
-    }
-
+  context.locals.camomilla.response = resp
+  if (resp.ok) {
+    const page = await resp.json()
     context.locals.camomilla.page = page
-
     if (page?.redirect && page.status == 301) {
       const baseUrl = context.url.href.replace(context.url.pathname, '')
       const redirectTo = `${baseUrl}${page.redirect}`
       return Response.redirect(redirectTo, 301)
     }
-
     const preview = context.url.searchParams?.get('preview')
 
     if (page.is_public || preview === 'true') {
@@ -57,12 +43,17 @@ export const middlewarePage: MiddlewareHandler = async (
       context.locals.camomilla.response = new Response(page, {
         status: 404,
         statusText: 'Not Public',
-        headers: response.headers
+        headers: resp.headers
       })
     }
-  } catch (error: { message: string } | any) {
-    context.locals.camomilla.error = error.message
+  } else {
+    const content = await resp.text()
+    context.locals.camomilla.error = { content }
+    try {
+      context.locals.camomilla.error.json = JSON.parse(content)
+    } catch (e) {
+      console.error(e)
+    }
   }
-
   return next()
 }
