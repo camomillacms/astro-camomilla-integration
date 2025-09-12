@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.6](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.5...v0.4.6) (2025-09-12)
+
+### Bug Fixes
+
+- export ErrorRenderer.astro ([f4193ce](https://github.com/camomillacms/astro-camomilla-integration/commit/f4193ce36981f7b305a623ab1b752a8686b1203c))
+
 ## [0.4.5](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.4...v0.4.5) (2025-09-12)
 
 ### Bug Fixes
