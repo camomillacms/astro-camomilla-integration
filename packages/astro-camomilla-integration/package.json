@@ -15,7 +15,8 @@
     ".": "./src/index.ts",
     "./router-index.astro": "./src/router/index.astro",
     "./middleware": "./src/middleware/index.ts",
-    "./layouts/MainLayout.astro": "./src/layouts/MainLayout.astro"
+    "./layouts/MainLayout.astro": "./src/layouts/MainLayout.astro",
+    "./components/ErrorRenderer.astro": "./src/components/ErrorRenderer.astro"
   },
   "scripts": {},
   "type": "module",
