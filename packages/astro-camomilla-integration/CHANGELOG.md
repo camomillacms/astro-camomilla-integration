@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.5](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.4...v0.4.5) (2025-09-12)
+
+### Bug Fixes
+
+- handle 500 error reponses from camomilla without crashing everything 👩‍🚒 ([5448c05](https://github.com/camomillacms/astro-camomilla-integration/commit/5448c05fdd020ccff0f488656f06e022dd8e49b9))
+- **keywords:** kewywords as string, show only there is content ([317f4dd](https://github.com/camomillacms/astro-camomilla-integration/commit/317f4dd3e659496416379cbc02f0b3db3a0a3735))
+
 ## [0.4.4](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.3...v0.4.4) (2025-09-03)
 
 ### Bug Fixes
