@@ -8,7 +8,7 @@ export const handlers = [
       is_public: true,
       title: 'Seo Mocked Title',
       description: 'Seo mocked description',
-      keywords: ['MockedKey', 'MockedKey2'],
+      keywords: 'MockedKey, MockedKey2',
       og_description: 'Seo mocked og_description',
       og_title: 'Seo mocked og_title',
       og_type: 'Seo mocked og_type',
