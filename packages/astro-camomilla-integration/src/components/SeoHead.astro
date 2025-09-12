@@ -29,7 +29,7 @@ const computedSeo = {
 <title>{computedSeo.title}</title>
 <link rel="canonical" href={computedSeo.canonicalUrl} />
 <meta name="description" content={computedSeo.description} />
-{computedSeo.keywords && (<meta name="keywords" content={computedSeo.keywords} />) }
+{computedSeo.keywords && <meta name="keywords" content={computedSeo.keywords} />}
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={computedSeo.ogType} />
