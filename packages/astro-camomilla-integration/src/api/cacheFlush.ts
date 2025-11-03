@@ -1,5 +1,5 @@
 import type { AstroSharedContext } from 'astro'
-import { isAccessGranted } from '../utils/permissions.ts'
+import { isStaff } from '../utils/permissions.ts'
 import type { Cacheable, Keyv } from 'cacheable'
 
 async function collectAllCacheKeys(cacheStore: any): Promise<string[]> {
@@ -17,7 +17,7 @@ async function collectAllCacheKeys(cacheStore: any): Promise<string[]> {
 
 export async function GET(context: AstroSharedContext): Promise<Response> {
   context.locals.camomilla?.cache('NEVER_CACHE')
-  if (context.locals.camomilla?.user && isAccessGranted(context.locals.camomilla.user)) {
+  if (context.locals.camomilla?.user && isStaff(context.locals.camomilla.user)) {
     const cacheStore: Cacheable = context.locals.camomilla.cacheStore
     return new Response(JSON.stringify(await collectAllCacheKeys(cacheStore)), { status: 200 })
   }
@@ -26,7 +26,7 @@ export async function GET(context: AstroSharedContext): Promise<Response> {
 
 export async function POST(context: AstroSharedContext): Promise<Response> {
   context.locals.camomilla?.cache('NEVER_CACHE')
-  if (context.locals.camomilla?.user && isAccessGranted(context.locals.camomilla.user)) {
+  if (context.locals.camomilla?.user && isStaff(context.locals.camomilla.user)) {
     const { keys } = await context.request.json()
     const cacheStore: Cacheable = context.locals.camomilla.cacheStore
     if (Array.isArray(keys)) {
