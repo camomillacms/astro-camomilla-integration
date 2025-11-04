@@ -1,4 +1,5 @@
 ---
+import ErrorRenderer from '../components/ErrorRenderer.astro'
 import MainLayout from '../layouts/MainLayout.astro'
 const template_file = Astro.locals.camomilla?.page?.template_file
 const pageData = Astro.locals.camomilla?.page
@@ -46,7 +47,7 @@ const error = Astro.locals.camomilla?.response?.statusText || 'Unknown Error'
     </h1>
     {template_file && <pre> {template_file} </pre>}
     {pageData && <pre class="scrollable">{JSON.stringify(pageData, null, 2)}</pre>}
-    {pageError && <pre class="scrollable">{JSON.stringify(pageError, null, 2)}</pre>}
+    {pageError && <ErrorRenderer error={pageError} />}
   </main>
 </MainLayout>
 

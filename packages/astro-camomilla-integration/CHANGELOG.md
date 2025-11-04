@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.6](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.5...v0.4.6) (2025-09-12)
+
+### Bug Fixes
+
+- export ErrorRenderer.astro ([f4193ce](https://github.com/camomillacms/astro-camomilla-integration/commit/f4193ce36981f7b305a623ab1b752a8686b1203c))
+
+## [0.4.5](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.4...v0.4.5) (2025-09-12)
+
+### Bug Fixes
+
+- handle 500 error reponses from camomilla without crashing everything 👩‍🚒 ([5448c05](https://github.com/camomillacms/astro-camomilla-integration/commit/5448c05fdd020ccff0f488656f06e022dd8e49b9))
+- **keywords:** kewywords as string, show only there is content ([317f4dd](https://github.com/camomillacms/astro-camomilla-integration/commit/317f4dd3e659496416379cbc02f0b3db3a0a3735))
+
+## [0.4.4](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.3...v0.4.4) (2025-09-03)
+
+### Bug Fixes
+
+- remove versioning in favicon ([9780813](https://github.com/camomillacms/astro-camomilla-integration/commit/978081312e1a5303862b4d9a85a4e6e9aa4f013e))
+
+## [0.4.3](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.2...v0.4.3) (2025-09-01)
+
+### Bug Fixes
+
+- added favicon.ico ([147c248](https://github.com/camomillacms/astro-camomilla-integration/commit/147c248cdc8ab86e45840da1c31d9f2963acb2e6))
+- added favicon.ico ([ee63085](https://github.com/camomillacms/astro-camomilla-integration/commit/ee630857d98afd1e022dd2df1d3204ca5c7fd485))
+
+## [0.4.2](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.1...v0.4.2) (2025-08-20)
+
+**Note:** Version bump only for package @camomillacms/astro-integration
+
 ## [0.4.1](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.0...v0.4.1) (2025-08-04)
 
 ### Bug Fixes

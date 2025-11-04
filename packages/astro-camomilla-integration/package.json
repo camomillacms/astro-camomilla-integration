@@ -1,6 +1,6 @@
 {
   "name": "@camomillacms/astro-integration",
-  "version": "0.4.1",
+  "version": "0.4.6",
   "description": "",
   "access": "public",
   "author": "bnznamco <gabriele.baldi.01@gmail.com>",
@@ -15,7 +15,8 @@
     ".": "./src/index.ts",
     "./router-index.astro": "./src/router/index.astro",
     "./middleware": "./src/middleware/index.ts",
-    "./layouts/MainLayout.astro": "./src/layouts/MainLayout.astro"
+    "./layouts/MainLayout.astro": "./src/layouts/MainLayout.astro",
+    "./components/ErrorRenderer.astro": "./src/components/ErrorRenderer.astro"
   },
   "scripts": {},
   "type": "module",

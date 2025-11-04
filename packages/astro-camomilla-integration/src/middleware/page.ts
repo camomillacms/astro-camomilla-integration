@@ -47,7 +47,13 @@ export const middlewarePage: MiddlewareHandler = async (
       })
     }
   } else {
-    context.locals.camomilla.error = await resp.json()
+    const content = await resp.text()
+    context.locals.camomilla.error = { content }
+    try {
+      context.locals.camomilla.error.json = JSON.parse(content)
+    } catch (e) {
+      console.error(e)
+    }
   }
   return next()
 }
