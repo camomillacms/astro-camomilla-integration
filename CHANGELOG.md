@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.6...v0.5.0) (2025-11-04)
+
+### Bug Fixes
+
+- **cache-flush-tests:** fix tests according new logic ([27b2439](https://github.com/camomillacms/astro-camomilla-integration/commit/27b2439951e8c8bbf6607c7728c81b6f2c267c5e))
+
+### Features
+
+- **permissions:** add isStaff check and use it on cacheFlush ([557688a](https://github.com/camomillacms/astro-camomilla-integration/commit/557688aa2a34e836c848465a5eb6b3a6bc87b548))
+
 ## [0.4.6](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.4.5...v0.4.6) (2025-09-12)
 
 ### Bug Fixes
