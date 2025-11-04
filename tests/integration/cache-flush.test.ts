@@ -22,25 +22,6 @@ describe('Cache Flush API endpoint', async () => {
     expect(json.error).toBe('User not authenticated')
   })
 
-  it('Should handle user is not superuser', async () => {
-    const container = await AstroContainer.create()
-    const response = await container.renderToResponse(CacheFlush as any, {
-      routeType: 'endpoint',
-      locals: {
-        camomilla: {
-          user: {
-            is_superuser: false,
-            is_staff: true,
-            is_active: true
-          },
-          cache: () => {}
-        }
-      }
-    })
-    const json = await response.json()
-    expect(json.error).toBe('User not authenticated')
-  })
-
   it('Should handle user not is not staff', async () => {
     const container = await AstroContainer.create()
     const response = await container.renderToResponse(CacheFlush as any, {
@@ -97,7 +78,29 @@ describe('Cache Flush API endpoint', async () => {
     expect(json.error).toBe('User not authenticated')
   })
 
-  it('Should handle user authenticated', async () => {
+  it('Should handle user is staff', async () => {
+    resetCacheEngine()
+    const container = await AstroContainer.create()
+    const cacheStore = getCacheEngine({ backend: 'redis', location: 'redis://localhost:6379' })
+    const response = await container.renderToResponse(CacheFlush as any, {
+      routeType: 'endpoint',
+      locals: {
+        camomilla: {
+          user: {
+            is_superuser: false,
+            is_staff: true,
+            is_active: true
+          },
+          cache: () => {},
+          cacheStore
+        }
+      }
+    })
+    const json = await response.json()
+    expect(json).toBeInstanceOf(Array)
+    resetCacheEngine()
+  })
+  it('Should handle user is superuser', async () => {
     resetCacheEngine()
     const container = await AstroContainer.create()
     const cacheStore = getCacheEngine({ backend: 'redis', location: 'redis://localhost:6379' })
