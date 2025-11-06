@@ -217,4 +217,182 @@ describe('Cache Flush API endpoint', async () => {
     expect(await cacheStore.get('test-key-2')).toBe('test-value-2')
     resetCacheEngine()
   })
+
+  it('Should delete cache by permalink', async () => {
+    resetCacheEngine()
+    const container = await AstroContainer.create()
+    const cacheStore = getCacheEngine({})
+    await cacheStore.set('http://localhost:4321/test', 'test-value')
+    await cacheStore.set('http://localhost:4321/test?param=1', 'test-value-with-param')
+    await cacheStore.set('http://localhost:4321/other', 'other-value')
+
+    const response = await container.renderToResponse(CacheFlush as any, {
+      routeType: 'endpoint',
+      locals: {
+        camomilla: {
+          user: {
+            is_superuser: true,
+            is_staff: true,
+            is_active: true
+          },
+          cache: () => {},
+          cacheStore
+        }
+      },
+      request: new Request('http://localhost/api/cache-flush', {
+        method: 'POST',
+        body: JSON.stringify({ permalink: '/test' }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    })
+
+    const json = await response.json()
+    expect(json.success).toBe(true)
+    expect(json.action).toBe('delete_permalink')
+    expect(json.deletedCount).toBe(2)
+    expect(json.deletedKeys).toContain('http://localhost:4321/test')
+    expect(json.deletedKeys).toContain('http://localhost:4321/test?param=1')
+
+    expect(await cacheStore.get('http://localhost:4321/test')).toBeUndefined()
+    expect(await cacheStore.get('http://localhost:4321/test?param=1')).toBeUndefined()
+    expect(await cacheStore.get('http://localhost:4321/other')).toBe('other-value')
+    resetCacheEngine()
+  })
+
+  it('Should handle permalink without leading slash', async () => {
+    resetCacheEngine()
+    const container = await AstroContainer.create()
+    const cacheStore = getCacheEngine({})
+    await cacheStore.set('http://localhost:4321/page', 'page-value')
+
+    const response = await container.renderToResponse(CacheFlush as any, {
+      routeType: 'endpoint',
+      locals: {
+        camomilla: {
+          user: {
+            is_superuser: true,
+            is_staff: true,
+            is_active: true
+          },
+          cache: () => {},
+          cacheStore
+        }
+      },
+      request: new Request('http://localhost/api/cache-flush', {
+        method: 'POST',
+        body: JSON.stringify({ permalink: 'page' }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    })
+
+    const json = await response.json()
+    expect(json.success).toBe(true)
+    expect(json.deletedCount).toBe(1)
+    expect(await cacheStore.get('http://localhost:4321/page')).toBeUndefined()
+    resetCacheEngine()
+  })
+
+  it('Should return error for invalid request body', async () => {
+    const container = await AstroContainer.create()
+    const cacheStore = getCacheEngine({})
+
+    const response = await container.renderToResponse(CacheFlush as any, {
+      routeType: 'endpoint',
+      locals: {
+        camomilla: {
+          user: {
+            is_superuser: true,
+            is_staff: true,
+            is_active: true
+          },
+          cache: () => {},
+          cacheStore
+        }
+      },
+      request: new Request('http://localhost/api/cache-flush', {
+        method: 'POST',
+        body: JSON.stringify({}),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    })
+
+    const json = await response.json()
+    expect(response.status).toBe(400)
+    expect(json.error).toContain('Invalid request body')
+    resetCacheEngine()
+  })
+
+  it('Should return error for empty body', async () => {
+    const container = await AstroContainer.create()
+    const cacheStore = getCacheEngine({})
+
+    const response = await container.renderToResponse(CacheFlush as any, {
+      routeType: 'endpoint',
+      locals: {
+        camomilla: {
+          user: {
+            is_superuser: true,
+            is_staff: true,
+            is_active: true
+          },
+          cache: () => {},
+          cacheStore
+        }
+      },
+      request: new Request('http://localhost/api/cache-flush', {
+        method: 'POST',
+        body: '',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    })
+
+    const json = await response.json()
+    expect(response.status).toBe(400)
+    expect(json.error).toContain('Invalid request body')
+    resetCacheEngine()
+  })
+
+  it('Should return success with no deletions for non-existing permalink', async () => {
+    resetCacheEngine()
+    const container = await AstroContainer.create()
+    const cacheStore = getCacheEngine({})
+    await cacheStore.set('http://localhost:4321/existing', 'existing-value')
+
+    const response = await container.renderToResponse(CacheFlush as any, {
+      routeType: 'endpoint',
+      locals: {
+        camomilla: {
+          user: {
+            is_superuser: true,
+            is_staff: true,
+            is_active: true
+          },
+          cache: () => {},
+          cacheStore
+        }
+      },
+      request: new Request('http://localhost/api/cache-flush', {
+        method: 'POST',
+        body: JSON.stringify({ permalink: '/non-existing' }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    })
+
+    const json = await response.json()
+    expect(json.success).toBe(true)
+    expect(json.deletedCount).toBe(0)
+    expect(json.deletedKeys).toEqual([])
+    expect(await cacheStore.get('http://localhost:4321/existing')).toBe('existing-value')
+    resetCacheEngine()
+  })
 })
