@@ -3,10 +3,16 @@ import { ClientRouter } from 'astro:transitions'
 import { styles } from 'virtual:camomilla-css-compiler'
 import SeoHead from '../components/SeoHead.astro'
 const seo = Astro.locals.camomilla?.page
+
+export interface Props {
+  lang?: string
+}
+
+const { lang } = Astro.props
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang || 'en'}>
   <head>
     <ClientRouter />
     {styles && <style set:html={styles} type="text/css" data-vite-dev-id="global-css" />}
