@@ -48,7 +48,8 @@ export default {
         ttl: 60 * 60 * 1000 // Time to live in milliseconds or s, m, h (e.g. "1h" for 1 hour)
         keyPrefix: "astro-camomilla-integration" // Prefix for the cache keys
         varyOnHeaders: ["Cookie", "User-Agent"] // Headers to vary the cache on
-      }
+      },
+      enableTransitions: false // If enabled, the integration will enable the Astro view-transitions
     }),
   ],
   output: "server",

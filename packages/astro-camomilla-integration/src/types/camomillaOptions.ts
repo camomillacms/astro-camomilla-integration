@@ -17,7 +17,8 @@ export const optionsSchema = z.object({
   stylesIndex: z.string().optional(),
   forwardedHeaders: z.array(z.string()).default([]),
   cache: cacheSchema.partial().optional(),
-  debug: z.boolean().default(false)
+  debug: z.boolean().default(false),
+  enableTransitions: z.boolean().default(false)
 })
 
 export type CamomillaOptions = z.infer<typeof optionsSchema>

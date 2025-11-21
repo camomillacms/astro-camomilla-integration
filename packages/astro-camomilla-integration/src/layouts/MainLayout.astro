@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions'
 import { styles } from 'virtual:camomilla-css-compiler'
 import SeoHead from '../components/SeoHead.astro'
+import { getIntegrationOptions } from '../utils/getIntegrationOptions.js'
 const seo = Astro.locals.camomilla?.page
 
 export interface Props {
@@ -9,12 +10,13 @@ export interface Props {
 }
 
 const { lang } = Astro.props
+const { enableTransitions } = getIntegrationOptions()
 ---
 
 <!doctype html>
 <html lang={lang || 'en'}>
   <head>
-    <ClientRouter />
+    {enableTransitions && <ClientRouter />}
     {styles && <style set:html={styles} type="text/css" data-vite-dev-id="global-css" />}
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
