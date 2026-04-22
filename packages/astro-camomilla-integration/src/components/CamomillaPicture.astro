@@ -1,0 +1,123 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+import type { CamomillaMedia, CamomillaMediaRendition } from '../types/camomillaMedia'
+
+type SourceFormat = 'avif' | 'webp' | 'jpeg' | 'png' | 'original' | (string & {})
+
+export interface Props extends Omit<HTMLAttributes<'img'>, 'src' | 'srcset' | 'alt'> {
+  media: CamomillaMedia | null | undefined
+  sizes?: string
+  alt?: string
+  loading?: 'lazy' | 'eager'
+  decoding?: 'async' | 'sync' | 'auto'
+  fetchpriority?: 'high' | 'low' | 'auto'
+  formats?: SourceFormat[]
+  fallbackFormat?: string
+  pictureClass?: string
+  class?: string
+}
+
+const {
+  media,
+  sizes,
+  alt,
+  loading = 'lazy',
+  decoding = 'async',
+  fetchpriority,
+  formats = ['avif', 'webp'],
+  fallbackFormat = 'original',
+  pictureClass,
+  class: className,
+  ...imgAttrs
+} = Astro.props
+
+const mimeByFormat: Record<string, string> = {
+  avif: 'image/avif',
+  webp: 'image/webp',
+  jpeg: 'image/jpeg',
+  jpg: 'image/jpeg',
+  png: 'image/png',
+  gif: 'image/gif'
+}
+
+type GroupedEntry = { width: number; url: string }
+
+function groupByFormat(renditions: Record<string, CamomillaMediaRendition> | undefined) {
+  const grouped: Record<string, GroupedEntry[]> = {}
+  if (!renditions) return grouped
+  for (const entry of Object.values(renditions)) {
+    if (!entry || !entry.format || !entry.url || !entry.width) continue
+    ;(grouped[entry.format] ||= []).push({ width: entry.width, url: entry.url })
+  }
+  for (const fmt of Object.keys(grouped)) {
+    grouped[fmt].sort((a, b) => a.width - b.width)
+  }
+  return grouped
+}
+
+function srcsetFromEntries(entries: GroupedEntry[] | undefined) {
+  if (!entries || entries.length === 0) return ''
+  return entries.map(({ url, width }) => `${url} ${width}w`).join(', ')
+}
+
+const grouped = groupByFormat(media?.renditions)
+const hasRenditions = Object.keys(grouped).length > 0
+
+const fallbackEntries = grouped[fallbackFormat] || grouped.original
+const largestFallback = fallbackEntries?.[fallbackEntries.length - 1]
+
+const imgSrc = largestFallback?.url || media?.file || ''
+const imgSrcset = srcsetFromEntries(fallbackEntries)
+
+const sourcesToRender: { type: string; srcset: string }[] = []
+for (const fmt of formats) {
+  const entries = grouped[fmt]
+  if (!entries || entries.length === 0) continue
+  const srcset = srcsetFromEntries(entries)
+  if (!srcset) continue
+  sourcesToRender.push({ type: mimeByFormat[fmt] || `image/${fmt}`, srcset })
+}
+
+const resolvedAlt = alt ?? media?.alt_text ?? ''
+const imgWidth = media?.image_props?.width
+const imgHeight = media?.image_props?.height
+---
+
+{
+  media && hasRenditions && (
+    <picture class={pictureClass}>
+      {sourcesToRender.map((source) => (
+        <source type={source.type} srcset={source.srcset} sizes={sizes} />
+      ))}
+      <img
+        src={imgSrc}
+        srcset={imgSrcset || undefined}
+        sizes={sizes}
+        alt={resolvedAlt}
+        loading={loading}
+        decoding={decoding}
+        fetchpriority={fetchpriority}
+        width={imgWidth}
+        height={imgHeight}
+        class={className}
+        {...imgAttrs}
+      />
+    </picture>
+  )
+}
+
+{
+  media && !hasRenditions && (
+    <img
+      src={media.file}
+      alt={resolvedAlt}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
+      width={imgWidth}
+      height={imgHeight}
+      class={className}
+      {...imgAttrs}
+    />
+  )
+}

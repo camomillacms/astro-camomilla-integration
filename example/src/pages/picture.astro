@@ -1,0 +1,84 @@
+---
+import MainLayout from '@camomillacms/astro-integration/layouts/MainLayout.astro'
+import CamomillaPicture from '@camomillacms/astro-integration/components/CamomillaPicture.astro'
+import type { CamomillaMedia } from '@camomillacms/astro-integration/types/camomillaMedia'
+import '../styles/main.scss'
+
+const media: CamomillaMedia = {
+  id: 1,
+  alt_text: 'Picture test',
+  title: 'Picture test',
+  description: null,
+  file: 'http://testserver/media/sample.jpg',
+  thumbnail: 'http://testserver/media/thumbnails/sample_thumb.png',
+  mime_type: 'image/jpeg',
+  image_props: { width: 1980, height: 1319, format: 'JPEG', mode: 'RGB' },
+  renditions: {
+    'sm-webp': {
+      url: 'http://testserver/media/renditions/sample/sm-webp.webp',
+      width: 400,
+      height: 267,
+      format: 'webp',
+      size: 18432
+    },
+    'md-webp': {
+      url: 'http://testserver/media/renditions/sample/md-webp.webp',
+      width: 800,
+      height: 533,
+      format: 'webp',
+      size: 52111
+    },
+    'lg-webp': {
+      url: 'http://testserver/media/renditions/sample/lg-webp.webp',
+      width: 1600,
+      height: 1066,
+      format: 'webp',
+      size: 180032
+    },
+    'sm-original': {
+      url: 'http://testserver/media/renditions/sample/sm-original.jpg',
+      width: 400,
+      height: 267,
+      format: 'jpeg',
+      size: 22000
+    },
+    'md-original': {
+      url: 'http://testserver/media/renditions/sample/md-original.jpg',
+      width: 800,
+      height: 533,
+      format: 'jpeg',
+      size: 64000
+    },
+    'lg-original': {
+      url: 'http://testserver/media/renditions/sample/lg-original.jpg',
+      width: 1600,
+      height: 1066,
+      format: 'jpeg',
+      size: 210000
+    }
+  }
+}
+
+const mediaNoRenditions: CamomillaMedia = {
+  ...media,
+  id: 2,
+  renditions: {}
+}
+---
+
+<!doctype html>
+<MainLayout>
+  <body>
+    <h1>CamomillaPicture test page</h1>
+
+    <section data-test="with-renditions">
+      <h2>With renditions</h2>
+      <CamomillaPicture media={media} sizes="(min-width: 1024px) 1600px, 100vw" class="demo-img" />
+    </section>
+
+    <section data-test="no-renditions">
+      <h2>Without renditions (degrades to plain img)</h2>
+      <CamomillaPicture media={mediaNoRenditions} alt="Fallback" />
+    </section>
+  </body>
+</MainLayout>
