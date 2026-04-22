@@ -5,38 +5,35 @@ on:
     inputs:
       force_publish:
         description: 'Force Lerna to publish even if no changes are detected'
-        required: false
-        default: 'false'
+        type: boolean
+        default: false
 
 permissions:
-  contents: read # for checkout
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
           run_install: false
 
-      - name: Install Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
           cache: pnpm
-          registry-url: https://registry.npmjs.org
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -49,10 +46,9 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          CMD="pnpm run lerna publish --conventional-commits --no-private --yes"
-          if [ "${{ github.event.inputs.force_publish }}" == "true" ]; then
+          CMD="pnpm run lerna publish --conventional-commits --no-private --provenance --yes"
+          if [ "${{ inputs.force_publish }}" == "true" ]; then
             CMD="$CMD --force-publish"
           fi
           echo "Running: $CMD"
