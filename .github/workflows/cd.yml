@@ -43,13 +43,40 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Release
+      - name: Version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          CMD="pnpm run lerna publish --conventional-commits --no-private --provenance --yes"
+          CMD="pnpm run lerna version --conventional-commits --yes"
           if [ "${{ inputs.force_publish }}" == "true" ]; then
             CMD="$CMD --force-publish"
           fi
           echo "Running: $CMD"
           eval $CMD
+
+      - name: Ensure npm supports trusted publishing
+        run: npm install -g npm@latest
+
+      - name: Publish
+        run: |
+          for pkg_dir in packages/*/; do
+            pkg_json="$pkg_dir/package.json"
+            [ -f "$pkg_json" ] || continue
+
+            name=$(node -p "require('./$pkg_json').name")
+            version=$(node -p "require('./$pkg_json').version")
+            is_private=$(node -p "require('./$pkg_json').private === true")
+
+            if [ "$is_private" = "true" ]; then
+              echo "Skipping $name (private)"
+              continue
+            fi
+
+            if npm view "$name@$version" version >/dev/null 2>&1; then
+              echo "Skipping $name@$version (already published)"
+              continue
+            fi
+
+            echo "Publishing $name@$version"
+            (cd "$pkg_dir" && npm publish --provenance --access public)
+          done
