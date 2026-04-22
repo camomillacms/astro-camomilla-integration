@@ -142,6 +142,74 @@ You can configure the headers to forward in the `astro.config.mjs` file by setti
 
 To inject global styles, add main (css or scss) in stylesIndex option.
 
+## Components
+
+### `<CamomillaPicture>`
+
+Render a responsive `<picture>` from a Camomilla `Media` object. Uses the `renditions` / `srcset` fields produced by Camomilla's responsive rendition system (AVIF + WebP + original at `sm`/`md`/`lg` widths by default) and degrades gracefully to a plain `<img>` when no renditions exist (non-image, feature disabled, or legacy rows).
+
+```astro
+---
+import CamomillaPicture from '@camomillacms/astro-integration/components/CamomillaPicture.astro'
+import type { CamomillaMedia } from '@camomillacms/astro-integration/types/camomillaMedia'
+
+const media = Astro.locals.camomilla?.page?.template_data?.hero as CamomillaMedia
+---
+
+<CamomillaPicture
+  media={media}
+  sizes="(min-width: 1024px) 1600px, 100vw"
+  loading="eager"
+  fetchpriority="high"
+  class="hero-img"
+/>
+```
+
+#### Output
+
+```html
+<picture>
+  <source type="image/avif" srcset="…sm-avif.avif 400w, …md-avif.avif 800w, …lg-avif.avif 1600w" sizes="…">
+  <source type="image/webp" srcset="…sm-webp.webp 400w, …md-webp.webp 800w, …lg-webp.webp 1600w" sizes="…">
+  <img src="…lg-original.jpg" srcset="…" sizes="…" alt="…" loading="lazy" decoding="async" width="1980" height="1319">
+</picture>
+```
+
+The browser picks the first `<source>` it understands; the `<img>` inside `<picture>` is the universal fallback. `width` / `height` are filled from `media.image_props` to prevent layout shift.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `media` | `CamomillaMedia` | — | The Media object from Camomilla's REST API. Required. |
+| `sizes` | `string` | `undefined` | Standard HTML `sizes` attribute, applied to every `<source>` and the `<img>`. |
+| `alt` | `string` | `media.alt_text` | Image alt text. Falls back to the Media's alt_text when omitted. |
+| `loading` | `'lazy' \| 'eager'` | `'lazy'` | Native lazy-loading hint. Use `'eager'` for above-the-fold images. |
+| `decoding` | `'async' \| 'sync' \| 'auto'` | `'async'` | Native decoding hint. |
+| `fetchpriority` | `'high' \| 'low' \| 'auto'` | — | Signal to the browser's resource loader. |
+| `formats` | `SourceFormat[]` | `['avif', 'webp']` | Format preference order for `<source>` tags. First supported by the browser wins. |
+| `fallbackFormat` | `string` | `'original'` | Which rendition set provides the fallback `<img src>` + `srcset`. |
+| `pictureClass` | `string` | — | Class applied to the `<picture>` element. |
+| `class` | `string` | — | Class applied to the `<img>` element. Pass Tailwind/CSS classes here. |
+
+All other props are forwarded to the `<img>` as HTML attributes.
+
+#### Degraded fallback
+
+When `media.renditions` is empty, the component renders a bare `<img src={media.file}>` with the same `alt` / `loading` / `class` props — no `<picture>` wrapper. This means existing pages keep working unchanged after upgrading, even for Media rows that haven't been regenerated yet.
+
+#### Types
+
+```typescript
+import type {
+  CamomillaMedia,
+  CamomillaMediaRendition,
+  CamomillaMediaRenditionFormat
+} from '@camomillacms/astro-integration/types/camomillaMedia'
+```
+
+Matches the Camomilla REST API response shape, including the `renditions` map and the `srcset` convenience field grouped by format.
+
 ## Cache
 
 The integration supports caching of the entire Astro response.
