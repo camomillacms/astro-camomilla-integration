@@ -125,10 +125,28 @@ export default templates;
 > [!NOTE]  
 > Even if this approach is more fine-grained, it is recommended to always declare a generic `error` template to handle unexpected errors.
 
-## Draft Pages
+## Draft Pages and Previews
 
-This integration will check for the `is_public` field in the Camomilla CMS response to determine if a page is a draft or not.
-If the `is_public` field is set to `false`, the integration will return a `404` status code. If you need to access draft pages, you can add `?preview=true` to the URL.
+Camomilla 6.4+ enforces page visibility **server-side**: the public `pages-router` 404s every trashed, draft, or scheduled-first-publish row before they ever reach the integration. The middleware no longer client-side-checks `is_public` — that gate moved into the CMS.
+
+To preview, authenticated users append `?preview=true` to the URL. The integration then makes a single authenticated request to the camomilla preview router:
+
+```
+GET /api/camomilla/pages-router-preview/<permalink>
+```
+
+This endpoint covers **both** preview cases uniformly:
+
+- **Public page with a pending draft** — the live row is the base and the draft fields are layered on top. This is the most common preview flow (editor checking how their pending edits will look on an already-live page).
+- **Non-public page** (trashed, draft, scheduled-first-publish) — the `is_public` gate is bypassed so the editor can preview content that the public router would 404.
+
+The response carries `has_draft: true` whenever an overlay was applied. The endpoint does **not** trigger `publish_if_due()` — a preview shows the *current* draft state, not the post-materialised one. The visitor's `sessionid` and `csrftoken` cookies are forwarded. If the cookies are absent, the user lacks permission, or the permalink doesn't resolve, the integration falls through to the public router (which serves the live page for an already-public row, or 404s otherwise). Any response on a `?preview=true` URL is marked `NEVER_CACHE` so an editor's view never poisons the shared cache with a different user's state.
+
+The page payload exposed in `Astro.locals.camomilla.page` carries:
+
+- `status: 'PUB' | 'DRF' | 'PLA' | 'TRS'` — the lifecycle label (derived server-side from `published_at` + `deleted_at` + the Draft table; not a column).
+- `published_at: string | null` — replaces the legacy `publication_date`. Per-language: each language has its own `published_at_<lang>` column on the page row.
+- `has_draft?: boolean` / `has_scheduled_draft?: boolean` — present only on the authenticated preview response, never on the public router output.
 
 ## Forwarded Headers
 
