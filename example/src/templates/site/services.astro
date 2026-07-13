@@ -1,0 +1,71 @@
+---
+import SiteLayout from '../../components/SiteLayout.astro'
+
+/**
+ * Services landing — maps to camomilla's ``website/pages/services.html``.
+ * Child service pages are hardcoded for the demo (anonymous fetch
+ * against /api/camomilla/pages/ requires auth). The links match what
+ * ``seed_demo`` creates.
+ */
+const page = Astro.locals.camomilla?.page as any
+const data = page?.template_data ?? {}
+const breadcrumbs: Array<{ permalink: string; title: string }> = page?.breadcrumbs ?? []
+
+const pathname = Astro.url.pathname
+const prefixMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
+const langPrefix = prefixMatch ? `/${prefixMatch[1]}` : ''
+const isIt = prefixMatch && prefixMatch[1] === 'it'
+const t = (en: string, it: string) => (isIt ? it : en)
+
+const children = [
+  {
+    href: `${langPrefix}/services/consulting`,
+    title: t('Consulting', 'Consulenza'),
+    description: t(
+      'Hands-on help, from architecture to migration.',
+      "Supporto pratico, dall'architettura alla migrazione."
+    )
+  },
+  {
+    href: `${langPrefix}/services/training`,
+    title: t('Training', 'Formazione'),
+    description: t(
+      'Workshops for Django teams adopting Camomilla.',
+      'Workshop per team Django che adottano Camomilla.'
+    )
+  }
+]
+---
+
+<SiteLayout>
+  {
+    breadcrumbs.length > 1 && (
+      <nav class="breadcrumbs" aria-label="breadcrumb">
+        {breadcrumbs.map((crumb, i) => (
+          <span>
+            {i < breadcrumbs.length - 1 ? (
+              <a href={crumb.permalink}>{crumb.title}</a>
+            ) : (
+              <>{crumb.title}</>
+            )}
+          </span>
+        ))}
+      </nav>
+    )
+  }
+
+  <h1>{page?.title}</h1>
+  {page?.description && <p class="lead">{page.description}</p>}
+  {data.intro && <p>{data.intro}</p>}
+
+  <div class="grid grid-2">
+    {
+      children.map((child) => (
+        <a href={child.href} class="card" style="text-decoration:none;color:inherit;">
+          <h2 style="margin:0 0 .5rem;">{child.title}</h2>
+          <p style="margin:0;">{child.description}</p>
+        </a>
+      ))
+    }
+  </div>
+</SiteLayout>

@@ -1,0 +1,42 @@
+---
+import SiteLayout from '../../components/SiteLayout.astro'
+
+/**
+ * Article detail — maps to camomilla's ``website/articles/detail.html``.
+ * The ``Article`` model on the camomilla side ships ``content`` and
+ * ``tags`` in the serialized response (in addition to standard
+ * AbstractPage fields).
+ */
+const page = Astro.locals.camomilla?.page as any
+const breadcrumbs: Array<{ permalink: string; title: string }> = page?.breadcrumbs ?? []
+const tags: Array<{ name: string }> = page?.tags ?? []
+const author = page?.author
+---
+
+<SiteLayout>
+  {
+    breadcrumbs.length > 1 && (
+      <nav class="breadcrumbs" aria-label="breadcrumb">
+        {breadcrumbs.map((crumb, i) => (
+          <span>
+            {i < breadcrumbs.length - 1 ? (
+              <a href={crumb.permalink}>{crumb.title}</a>
+            ) : (
+              <>{crumb.title}</>
+            )}
+          </span>
+        ))}
+      </nav>
+    )
+  }
+
+  <article>
+    <h1>{page?.title}</h1>
+    {page?.description && <p class="lead">{page.description}</p>}
+    <p style="color:var(--fg-soft);font-size:.875rem;">
+      {tags.map((tag) => <span class="tag">{tag.name}</span>)}
+      {author?.username && <> · by {author.username}</>}
+    </p>
+    {page?.content && <div class="article-content" set:html={page.content} />}
+  </article>
+</SiteLayout>
