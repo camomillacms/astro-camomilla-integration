@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.6.3...v0.7.0) (2026-07-13)
+
+### Features
+
+- **menus:** add fetchMenu helper and menu types ([d4ea70a](https://github.com/camomillacms/astro-camomilla-integration/commit/d4ea70adef09e8140360959ae2d6bf645684cdb6))
+- **middleware:** server-side page lifecycle + authenticated preview ([361046d](https://github.com/camomillacms/astro-camomilla-integration/commit/361046dd0fa47b56d1ae04b8c6fa1997aa5f8598))
+
 ## [0.6.3](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.6.2...v0.6.3) (2026-04-22)
 
 **Note:** Version bump only for package @camomillacms/astro-integration
