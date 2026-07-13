@@ -1,0 +1,41 @@
+---
+import LangSwitch from './LangSwitch.astro'
+import MenuRenderer from './MenuRenderer.astro'
+import { fetchMenu } from '@camomillacms/astro-integration/menus'
+
+/**
+ * Header for the demo site. The main nav comes from the ``main`` menu
+ * managed in the camomilla admin and seeded by ``seed_demo``. The
+ * ``fetchMenu`` helper forwards the visitor's session cookies, so
+ * logged-in staff see menus immediately. Anonymous visitors fall through
+ * to a null menu and the nav is omitted (camomilla's ``MenuViewSet``
+ * requires auth by default — override its ``permission_classes`` if you
+ * want anon access).
+ *
+ * Lang switch lives on the right and is always rendered (it reads from
+ * the page's ``alternates`` and works for anyone).
+ */
+const menu = await fetchMenu('main', Astro)
+
+const pathname = Astro.url.pathname
+const prefixMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
+const langPrefix = prefixMatch ? `/${prefixMatch[1]}` : ''
+---
+
+<header class="site">
+  <div class="container">
+    <div class="brand">
+      <a href={langPrefix || '/'}>Camomilla Demo</a>
+    </div>
+    <div class="header-right">
+      {
+        menu && (
+          <nav>
+            <MenuRenderer nodes={menu.nodes} />
+          </nav>
+        )
+      }
+      <LangSwitch />
+    </div>
+  </div>
+</header>

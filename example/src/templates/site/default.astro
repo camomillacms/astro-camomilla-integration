@@ -1,0 +1,112 @@
+---
+import SiteLayout from '../../components/SiteLayout.astro'
+
+/**
+ * Default page template — maps to camomilla's ``website/pages/default.html``.
+ * Reads optional blocks out of ``page.template_data``: ``body`` (HTML
+ * string), ``values``, ``team``, ``features``, ``methods``. Mirrors the
+ * django template so the same content renders identically.
+ */
+const page = Astro.locals.camomilla?.page as any
+const data = page?.template_data ?? {}
+const breadcrumbs: Array<{ permalink: string; title: string }> = page?.breadcrumbs ?? []
+---
+
+<SiteLayout>
+  {
+    breadcrumbs.length > 1 && (
+      <nav class="breadcrumbs" aria-label="breadcrumb">
+        {breadcrumbs.map((crumb, i) => (
+          <span>
+            {i < breadcrumbs.length - 1 ? (
+              <a href={crumb.permalink}>{crumb.title}</a>
+            ) : (
+              <>{crumb.title}</>
+            )}
+          </span>
+        ))}
+      </nav>
+    )
+  }
+
+  <article>
+    <h1>{page?.title}</h1>
+    {page?.description && <p class="lead">{page.description}</p>}
+
+    {data.body && <Fragment set:html={data.body} />}
+
+    {
+      data.values && data.values.length > 0 && (
+        <>
+          <h2>What we care about</h2>
+          <div class="grid grid-3">
+            {data.values.map((value: { title: string; description: string }) => (
+              <div class="card feature-card">
+                <h3>{value.title}</h3>
+                <p>{value.description}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )
+    }
+
+    {
+      data.team && data.team.length > 0 && (
+        <>
+          <h2>Team</h2>
+          <div class="grid grid-3">
+            {data.team.map((member: { name: string; role: string; bio?: string }) => (
+              <div class="card feature-card">
+                <h3>{member.name}</h3>
+                <p style="color:var(--fg-soft);font-size:.875rem;margin:0;">{member.role}</p>
+                {member.bio && <p>{member.bio}</p>}
+              </div>
+            ))}
+          </div>
+        </>
+      )
+    }
+
+    {
+      data.features && data.features.length > 0 && (
+        <>
+          <h2>What you get</h2>
+          <div class="grid grid-3">
+            {data.features.map((feature: { icon?: string; title: string; description: string }) => (
+              <div class="card feature-card">
+                {feature.icon && (
+                  <span class="feature-icon" aria-hidden="true">
+                    {feature.icon}
+                  </span>
+                )}
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )
+    }
+
+    {
+      data.methods && data.methods.length > 0 && (
+        <>
+          <h2>How to reach us</h2>
+          <ul class="methods">
+            {data.methods.map((method: { label: string; value: string; href?: string }) => (
+              <li>
+                <span class="method-label">{method.label}</span>
+                {method.href ? (
+                  <a href={method.href}>{method.value}</a>
+                ) : (
+                  <span>{method.value}</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+  </article>
+</SiteLayout>

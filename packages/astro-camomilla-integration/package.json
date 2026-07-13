@@ -18,7 +18,9 @@
     "./layouts/MainLayout.astro": "./src/layouts/MainLayout.astro",
     "./components/ErrorRenderer.astro": "./src/components/ErrorRenderer.astro",
     "./components/CamomillaPicture.astro": "./src/components/CamomillaPicture.astro",
-    "./types/camomillaMedia": "./src/types/camomillaMedia.ts"
+    "./menus": "./src/menus.ts",
+    "./types/camomillaMedia": "./src/types/camomillaMedia.ts",
+    "./types/camomillaMenu": "./src/types/camomillaMenu.ts"
   },
   "scripts": {},
   "type": "module",

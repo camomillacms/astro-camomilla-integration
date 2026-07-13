@@ -1,0 +1,72 @@
+---
+import SiteLayout from '../../components/SiteLayout.astro'
+
+/**
+ * Renders the camomilla homepage with hero / features / testimonial.
+ * Maps to camomilla's ``website/pages/home.html`` via templates/index.js.
+ *
+ * The shape of ``page.template_data`` is exactly what the camomilla seed
+ * embeds (see ``seed_demo.py`` PAGE_FIXTURES[/]). ``page`` is the
+ * deserialized ``pages-router`` response — translations have already been
+ * collapsed to the active language by the time we get it here, and any
+ * camomilla permalinks in ``template_data`` come back pre-resolved to
+ * the active-language URL (see ``AbstractPageMixin.to_representation``).
+ * That means ``hero.cta_url`` is already ``"/it/about/"`` on /it/ and
+ * ``"/about/"`` on the default route — astro doesn't have to know how
+ * Django's ``i18n_patterns`` builds URLs.
+ */
+const page = Astro.locals.camomilla?.page as any
+const data = page?.template_data ?? {}
+const hero = data.hero ?? {}
+const features: Array<{ icon?: string; title: string; description: string }> = data.features ?? []
+const testimonial = data.testimonial ?? null
+---
+
+<SiteLayout>
+  <section class="hero">
+    <h1>{hero.headline ?? page?.title}</h1>
+    {hero.subheadline && <p class="lead">{hero.subheadline}</p>}
+    {
+      hero.cta_url && (
+        <p>
+          <a href={hero.cta_url} class="cta-button">
+            {hero.cta_label ?? 'Learn more'}
+          </a>
+        </p>
+      )
+    }
+  </section>
+
+  {
+    features.length > 0 && (
+      <>
+        <h2>Highlights</h2>
+        <div class="grid grid-3">
+          {features.map((feature) => (
+            <div class="card feature-card">
+              {feature.icon && (
+                <span class="feature-icon" aria-hidden="true">
+                  {feature.icon}
+                </span>
+              )}
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </>
+    )
+  }
+
+  {
+    testimonial && (
+      <blockquote class="testimonial">
+        “{testimonial.quote}”
+        <cite>
+          — {testimonial.author}
+          {testimonial.role && <>, {testimonial.role}</>}
+        </cite>
+      </blockquote>
+    )
+  }
+</SiteLayout>

@@ -1,0 +1,24 @@
+---
+/**
+ * Shows a "Preview mode" banner whenever the page was resolved through the
+ * authenticated ``pages-router-preview`` endpoint. ``is_preview`` is set by
+ * the integration for every previewed state — including a non-public page
+ * with no pending Draft, where ``has_draft`` is false. Keying off
+ * ``has_draft`` alone would silently render such pages with no indication
+ * that you're looking at non-public content. When a draft overlay *was*
+ * applied we say so.
+ */
+const page = Astro.locals.camomilla?.page as any
+const isPreview = Boolean(page?.is_preview)
+const hasDraft = Boolean(page?.has_draft)
+---
+
+{
+  isPreview && (
+    <div class="preview-banner">
+      {hasDraft
+        ? '📝 Preview mode — draft fields overlaid on the live page'
+        : '📝 Preview mode — non-public page'}
+    </div>
+  )
+}

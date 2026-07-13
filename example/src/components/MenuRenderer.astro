@@ -1,0 +1,25 @@
+---
+import type { CamomillaMenuNode } from '@camomillacms/astro-integration/types/camomillaMenu'
+// Self-import: Astro doesn't have an ``Astro.self`` builtin, so the
+// canonical recursive-render pattern is to import the component from
+// its own file and use it for child nodes.
+import Self from './MenuRenderer.astro'
+
+interface Props {
+  nodes: CamomillaMenuNode[]
+}
+const { nodes } = Astro.props
+---
+
+{
+  nodes.length > 0 && (
+    <ul>
+      {nodes.map((node) => (
+        <li>
+          {node.link?.url ? <a href={node.link.url}>{node.title}</a> : <span>{node.title}</span>}
+          {node.nodes && node.nodes.length > 0 && <Self nodes={node.nodes} />}
+        </li>
+      ))}
+    </ul>
+  )
+}

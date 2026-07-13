@@ -1,0 +1,58 @@
+---
+/**
+ * Inline language switch. Reads ``page.alternates`` (the dict returned by
+ * camomilla's ``AbstractPage.alternate_urls()`` → keyed by lang code,
+ * value is the resolved URL in that language or ``null`` when that
+ * language isn't public).
+ *
+ * The currently active language is whichever URL prefix Astro served the
+ * request from — we read it from the camomilla page's ``permalink`` plus
+ * the path prefix. The page already carries the per-language permalinks
+ * in ``alternates`` for the OTHER languages, so the active one is
+ * "everything not in alternates".
+ */
+const page = Astro.locals.camomilla?.page as any
+const alternates: Record<string, string | null> = page?.alternates ?? {}
+
+// Active language: the locale prefix of the current URL, or the
+// configured default. Camomilla strips the active language from
+// ``alternates``, so we know the current language is whatever isn't
+// listed there.
+const pathname = Astro.url.pathname
+const prefixMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
+const activeLang = prefixMatch ? prefixMatch[1] : 'en'
+
+// Languages the application knows about. Mirrors LANGUAGES in
+// example/camomilla_example/settings.py — keep both lists in sync.
+const KNOWN_LANGUAGES = ['en', 'it']
+---
+
+<div class="lang-switch" aria-label="language">
+  {
+    KNOWN_LANGUAGES.map((code) => {
+      if (code === activeLang) {
+        return (
+          <span class="lang-switch__chip lang-switch__chip--active" title={code}>
+            {code.toUpperCase()}
+          </span>
+        )
+      }
+      const url = alternates[code]
+      if (url) {
+        return (
+          <a class="lang-switch__chip" href={url} title={code}>
+            {code.toUpperCase()}
+          </a>
+        )
+      }
+      return (
+        <span
+          class="lang-switch__chip lang-switch__chip--disabled"
+          title={`${code}: not available`}
+        >
+          {code.toUpperCase()}
+        </span>
+      )
+    })
+  }
+</div>

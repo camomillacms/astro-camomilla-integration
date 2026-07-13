@@ -1,0 +1,31 @@
+---
+import MainLayout from '@camomillacms/astro-integration/layouts/MainLayout.astro'
+import SiteHeader from './SiteHeader.astro'
+import SiteFooter from './SiteFooter.astro'
+import PreviewBanner from './PreviewBanner.astro'
+
+/**
+ * Demo-site layout. Wraps the integration's MainLayout (which handles
+ * the ``<head>`` + SEO tags) and slots in the shared header, footer,
+ * and preview banner. Page templates only need to fill the default
+ * slot with their content.
+ */
+const pathname = Astro.url.pathname
+const prefixMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
+const lang = prefixMatch ? prefixMatch[1] : 'en'
+---
+
+<MainLayout lang={lang}>
+  <slot name="seo-head-before" slot="seo-head-before" />
+  <slot name="seo-head" slot="seo-head" />
+  <slot name="seo-head-after" slot="seo-head-after" />
+
+  <PreviewBanner />
+  <SiteHeader />
+  <main>
+    <div class="container">
+      <slot />
+    </div>
+  </main>
+  <SiteFooter />
+</MainLayout>

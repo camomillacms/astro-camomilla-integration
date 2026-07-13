@@ -1,22 +1,240 @@
+// Demo site styles — visual parity with example/website/templates/website/base.html
+// on the camomilla side, so the same camomilla page rendered through django vs astro
+// looks essentially identical.
+
+:root {
+  --fg: #0d1117;
+  --fg-soft: #475569;
+  --bg: #f7fafc;
+  --bg-card: #ffffff;
+  --border: #e2e8f0;
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #f1f5f9;
+    --fg-soft: #94a3b8;
+    --bg: #0d1117;
+    --bg-card: #161b22;
+    --border: #30363d;
+    --accent: #60a5fa;
+    --accent-fg: #0d1117;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
-    font-family: Arial, sans-serif;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+  line-height: 1.5;
+  // Sticky footer: column flex so <main> stretches and pushes the footer down.
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; &:hover { text-decoration: underline; } }
+
+.container { max-width: 980px; margin: 0 auto; padding: 0 1.5rem; }
+
+header.site {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .brand { font-weight: 700; font-size: 1.125rem; }
+
+  nav ul {
+    list-style: none;
     margin: 0;
     padding: 0;
-    background-color: #19181b;
-    font-family: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
-      "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
-      "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
-
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
   }
-
-  h1, h2 {
-    color: #f0f0f0;
-    text-align: center;
-    margin-top: 50px;
+  nav li { position: relative; }
+  nav a { color: var(--fg); }
+  nav ul ul {
+    position: absolute;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    min-width: 12rem;
+    display: none;
   }
+  nav li:hover > ul { display: block; }
+  nav ul ul li a { display: block; padding: 0.5rem 1rem; }
+}
 
-  p {
-    color: #f0f0f0;
-    text-align: center;
-    margin-top: 20px;
+main {
+  padding: 2.5rem 0 4rem;
+  flex: 1 0 auto;
+}
+
+.breadcrumbs {
+  font-size: 0.875rem;
+  color: var(--fg-soft);
+  margin-bottom: 1.5rem;
+  a { color: var(--fg-soft); }
+  span:not(:last-child)::after { content: " / "; padding: 0 0.25rem; }
+}
+
+footer.site {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  color: var(--fg-soft);
+  font-size: 0.875rem;
+  background: var(--bg-card);
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.25rem;
+  }
+}
+
+.header-right { display: flex; align-items: center; gap: 1rem; }
+
+.lang-switch {
+  display: inline-flex;
+  gap: 0.25rem;
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--fg-soft);
+    text-decoration: none;
+
+    &:hover { background: var(--border); text-decoration: none; }
+    &--active {
+      background: var(--accent);
+      color: var(--accent-fg);
+      border-color: var(--accent);
+    }
+    &--disabled { opacity: 0.4; cursor: not-allowed; }
+  }
+}
+
+.preview-banner {
+  background: var(--accent);
+  color: var(--accent-fg);
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.grid { display: grid; gap: 1.25rem; }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 720px) {
+  .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  header.site nav ul { gap: 1rem; }
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  background: var(--border);
+  border-radius: 999px;
+  color: var(--fg-soft);
+}
+
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .feature-icon { font-size: 1.75rem; }
+  h3 { margin: 0; font-size: 1rem; }
+  p { margin: 0; color: var(--fg-soft); font-size: 0.95rem; }
+}
+
+blockquote.testimonial {
+  margin: 2rem 0;
+  padding: 1.5rem 2rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--accent);
+  font-size: 1.125rem;
+  font-style: italic;
+  color: var(--fg);
+
+  cite {
+    display: block;
+    margin-top: 0.75rem;
+    font-style: normal;
+    font-size: 0.875rem;
+    color: var(--fg-soft);
+  }
+}
+
+.methods {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .method-label { color: var(--fg-soft); }
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-radius: 6px;
+  font-weight: 500;
+  &:hover { text-decoration: none; opacity: 0.92; }
+}
+
+h1 { margin: 0 0 0.5rem; font-size: 2rem; }
+h2 { margin: 2rem 0 0.75rem; font-size: 1.5rem; }
+.lead { font-size: 1.125rem; color: var(--fg-soft); margin: 0 0 1.5rem; }

@@ -1,0 +1,30 @@
+---
+import MenuRenderer from './MenuRenderer.astro'
+import { fetchMenu } from '@camomillacms/astro-integration/menus'
+
+/**
+ * Footer for the demo site. Mirrors SiteHeader: the nav comes from the
+ * ``footer`` menu in the camomilla admin. The ``footer`` menu is seeded
+ * by ``seed_demo``.
+ */
+const menu = await fetchMenu('footer', Astro)
+
+const page = Astro.locals.camomilla?.page as any
+const templateFile = page?.template_file ?? ''
+---
+
+<footer class="site">
+  <div class="container">
+    <span>
+      © Camomilla demo · rendered by astro from
+      {templateFile ? <code>{templateFile}</code> : <code>fallback</code>}
+    </span>
+    {
+      menu && (
+        <nav>
+          <MenuRenderer nodes={menu.nodes} />
+        </nav>
+      )
+    }
+  </div>
+</footer>

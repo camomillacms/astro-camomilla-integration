@@ -1,0 +1,64 @@
+---
+import SiteLayout from '../../components/SiteLayout.astro'
+
+/**
+ * Blog listing — maps to camomilla's ``website/pages/blog_list.html``.
+ * Articles are hardcoded for the demo (the camomilla articles API
+ * requires authentication for anonymous reads in the default settings).
+ * In a real integration you would either expose the endpoint publicly
+ * or fetch with a service token.
+ */
+const page = Astro.locals.camomilla?.page as any
+const data = page?.template_data ?? {}
+
+const pathname = Astro.url.pathname
+const prefixMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
+const langPrefix = prefixMatch ? `/${prefixMatch[1]}` : ''
+const isIt = prefixMatch && prefixMatch[1] === 'it'
+const t = (en: string, it: string) => (isIt ? it : en)
+
+const articles = [
+  {
+    href: `${langPrefix}/blog/hello-world`,
+    title: t('Hello, world', 'Ciao, mondo'),
+    description: t(
+      'Our first post. Camomilla is up and running.',
+      'Il nostro primo post. Camomilla è online.'
+    ),
+    tags: [t('Technology', 'Tecnologia')]
+  },
+  {
+    href: `${langPrefix}/blog/on-design`,
+    title: t('On Design', 'Sul design'),
+    description: t(
+      'A few thoughts about content modeling.',
+      'Qualche riflessione sul modeling dei contenuti.'
+    ),
+    tags: [t('Design', 'Design'), t('Business', 'Business')]
+  }
+]
+---
+
+<SiteLayout>
+  <h1>{page?.title}</h1>
+  {page?.description && <p class="lead">{page.description}</p>}
+  {data.intro && <p>{data.intro}</p>}
+
+  <div class="grid grid-2">
+    {
+      articles.map((article) => (
+        <article class="card">
+          <h2 style="margin-top:0;">
+            <a href={article.href}>{article.title}</a>
+          </h2>
+          <p>{article.description}</p>
+          <p style="font-size:.875rem;color:var(--fg-soft);">
+            {article.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </p>
+        </article>
+      ))
+    }
+  </div>
+</SiteLayout>
