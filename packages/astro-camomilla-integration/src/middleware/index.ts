@@ -17,9 +17,12 @@ async function middlewareCamomilla(context: APIContext, next: MiddlewareNext) {
   return next()
 }
 
+// User must run BEFORE page: the page middleware reads
+// ``context.locals.camomilla.user`` to decide whether to attempt the
+// authenticated preview flow for non-public pages.
 export const onRequest = sequence(
   middlewareCamomilla,
   middlewareCache,
-  middlewarePage,
-  middlewareUser
+  middlewareUser,
+  middlewarePage
 )
