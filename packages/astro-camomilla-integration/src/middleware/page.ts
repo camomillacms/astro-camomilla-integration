@@ -14,10 +14,22 @@ const STATIC_ASSET_PATH_RE =
  * Turn a camomilla ``{ redirect, status }`` router body into an absolute
  * redirect Response. Shared by the public and preview paths — both routers
  * can answer a permalink with a canonical redirect instead of a page.
+ *
+ * ``body.redirect`` is normally a same-origin path (canonical form) but can
+ * be an absolute URL for custom redirects. Resolving it with ``new URL``
+ * handles both and — unlike string-concatenating a hand-sliced origin — never
+ * mangles the path or injects the current query string into it (which turned
+ * ``/x/?preview=true`` into ``/?preview=true/x/``).
  */
 function toRedirect(context: APIContext, body: CamomillaRedirect): Response {
-  const baseUrl = context.url.href.replace(context.url.pathname, '')
-  return Response.redirect(`${baseUrl}${body.redirect}`, body.status)
+  const current = new URL(context.url.href)
+  const target = new URL(body.redirect, current)
+  // Carry the query (e.g. ``?preview=true``) across a same-origin canonical
+  // redirect so an editor previewing a non-canonical URL stays in preview.
+  if (target.origin === current.origin && !target.search) {
+    target.search = current.search
+  }
+  return Response.redirect(target.href, body.status)
 }
 
 /**

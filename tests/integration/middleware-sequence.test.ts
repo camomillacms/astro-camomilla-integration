@@ -282,6 +282,39 @@ describe('Middleware sequence', async () => {
     } else throw new Error('Response is not an instance of Response')
   })
 
+  // Regression: a trailing-slash preview URL (``/x/?preview=true``) that
+  // canonical-redirects must produce a well-formed Location — origin + the
+  // canonical path + the preserved query — not ``/?preview=true/x``.
+  it('Should build a well-formed redirect URL and preserve ?preview=true', async () => {
+    fetchMocker.mockIf(/^http?:\/\/localhost:8000.*$/, (req) => {
+      switch (true) {
+        case req.url.endsWith('/api/camomilla/users/current/'):
+          return { status: 200, body: JSON.stringify({ id: 1, is_staff: true }) }
+        case req.url.includes('/api/camomilla/pages-router-preview/news/scheduled-launch/'):
+          return {
+            status: 200,
+            body: JSON.stringify({ redirect: '/news/scheduled-launch', status: 301 })
+          }
+      }
+    })
+
+    const ctxStaff = createMockContext(
+      true,
+      'http://localhost:8000/news/scheduled-launch/?preview=true',
+      '/news/scheduled-launch/'
+    )
+    ctxStaff.url.searchParams.set('preview', 'true')
+    const response = await onRequest(ctxStaff as any, async () => {
+      return new Response('Next middleware called')
+    })
+    if (response instanceof Response) {
+      expect(response.status).toBe(301)
+      expect(response.headers.get('location')).toBe(
+        'http://localhost:8000/news/scheduled-launch?preview=true'
+      )
+    } else throw new Error('Response is not an instance of Response')
+  })
+
   // ``buildAuthHeaders`` returns ``null`` if either cookie is missing. The
   // sessionid-only case is the typical "logged out partway" state — we
   // must not attempt the preview, just like the cookie-less request.

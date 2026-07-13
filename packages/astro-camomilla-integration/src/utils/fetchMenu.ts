@@ -27,13 +27,10 @@ async function buildAuthHeaders(
 /**
  * Fetch a camomilla menu by its ``key`` (e.g. ``"main"``, ``"footer"``).
  *
- * Uses the visitor's session cookies if present, so logged-in staff see
- * menus immediately. Camomilla's default ``MenuViewSet`` requires
- * authentication; if you want anonymous visitors to see menus, expose
- * the endpoint publicly server-side (override
- * ``MenuViewSet.permission_classes`` in your project) — the
- * ``fetchMenu`` helper itself doesn't care which auth strategy you pick,
- * it just forwards whatever cookies the visitor brought.
+ * Camomilla serves menus publicly (read-only) so a headless frontend can
+ * render navigation without a session. The visitor's session cookies are
+ * still forwarded when present, so authenticated staff contexts keep
+ * working; anonymous visitors get the menu too.
  *
  * Active-language aware: detects the language prefix on the current URL
  * (``/it/...``) and asks the API for that language so the menu's
@@ -62,7 +59,9 @@ export async function fetchMenu(key: string, context: APIContext): Promise<Camom
   const prefixMatch = pathname.match(/^\/([a-z]{2})(\/|$)/)
   const activeLang = prefixMatch ? prefixMatch[1] : null
 
-  const url = new URL(`${server}/api/camomilla/menus/${encodeURIComponent(key)}/`)
+  // Public resolver, keyed by menu key — standalone from the admin-gated
+  // ``menus`` viewset so anonymous visitors get navigation too.
+  const url = new URL(`${server}/api/camomilla/menus-router/${encodeURIComponent(key)}`)
   if (activeLang) url.searchParams.set('language', activeLang)
 
   const resp = await fetch(url.toString(), { headers })

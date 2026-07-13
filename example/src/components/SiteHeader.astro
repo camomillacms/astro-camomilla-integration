@@ -5,12 +5,10 @@ import { fetchMenu } from '@camomillacms/astro-integration/menus'
 
 /**
  * Header for the demo site. The main nav comes from the ``main`` menu
- * managed in the camomilla admin and seeded by ``seed_demo``. The
- * ``fetchMenu`` helper forwards the visitor's session cookies, so
- * logged-in staff see menus immediately. Anonymous visitors fall through
- * to a null menu and the nav is omitted (camomilla's ``MenuViewSet``
- * requires auth by default — override its ``permission_classes`` if you
- * want anon access).
+ * managed in the camomilla admin and seeded by ``seed_demo``. Menus are
+ * public in camomilla, so the nav renders for anonymous visitors too; the
+ * nav is only omitted if the menu key doesn't exist. ``fetchMenu`` still
+ * forwards the visitor's session cookies when present.
  *
  * Lang switch lives on the right and is always rendered (it reads from
  * the page's ``alternates`` and works for anyone).
