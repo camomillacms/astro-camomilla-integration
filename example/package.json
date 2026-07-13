@@ -1,37 +1,37 @@
 {
-	"name": "playground",
-	"type": "module",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"dev": "astro dev",
-		"start": "HOST=0.0.0.0 PORT=4321 node ./dist/server/entry.mjs",
-		"build": "astro check && astro build",
-		"preview": "astro preview",
-		"astro": "astro"
-	},
-	"dependencies": {
-		"@astrojs/node": "9.0.2",
-		"sass": "^1.89.0",
-		"@astrojs/react": "^4.2.7",
-		"@astrojs/vue": "^5.0.2",
-		"@camomillacms/astro-integration": "workspace:^",
-		"@nanostores/vue": "^0.11.0",
-		"@types/react": "^19.1.5",
-		"@types/react-dom": "^19.1.5",
-		"astro": "^5.0.5",
-		"astro-integration-kit": "0.18.0",
-		"nanostores": "^0.11.3",
-		"react": "^19.1.0",
-		"react-dom": "^19.1.0",
-		"tailwindcss": "^3.4.16",
-		"vue": "^3.5.13"
-	},
-	"devDependencies": {
-		"@astrojs/check": "^0.9.4",
-		"@nanostores/logger": "^0.4.0",
-		"@types/node": "^22.10.1",
-		"@vue/devtools-api": "^7.6.8",
-		"typescript": "^5.7.2"
-	}
+  "name": "playground",
+  "type": "module",
+  "version": "0.6.3",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "HOST=0.0.0.0 PORT=4321 node ./dist/server/entry.mjs",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/node": "9.0.2",
+    "@astrojs/react": "^4.2.7",
+    "@astrojs/vue": "^5.0.2",
+    "@camomillacms/astro-integration": "workspace:^",
+    "@nanostores/vue": "^0.11.0",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
+    "astro": "^5.0.5",
+    "astro-integration-kit": "0.18.0",
+    "nanostores": "^0.11.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "sass": "^1.89.0",
+    "tailwindcss": "^3.4.16",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@nanostores/logger": "^0.4.0",
+    "@types/node": "^22.10.1",
+    "@vue/devtools-api": "^7.6.8",
+    "typescript": "^5.7.2"
+  }
 }
