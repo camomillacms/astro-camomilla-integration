@@ -1,0 +1,120 @@
+---
+/**
+ * Inline-editable camomilla content, powered by djsuperadmin — the headless
+ * equivalent of Django's `{% superadmin_content %}` / `filter_content`.
+ *
+ *   <CamomillaContent identifier="hero">
+ *     <p>Fallback shown until an editor fills the block.</p>
+ *   </CamomillaContent>
+ *
+ * The page comes from the render context (`Astro.locals.camomilla.page`), so
+ * there's no page id to pass (or get wrong). You never pre-seed: a block is
+ * get-or-created once, server-side, the first time a superuser renders it.
+ *
+ * PERF: existing blocks are read straight from the page-router payload
+ * (`page.contents`) with their id, so N blocks on a page cost ZERO extra fetches;
+ * the browser then edits purely by id.
+ *
+ * Superusers get the editor; everyone else the plain HTML. Drop
+ * <DjSuperAdminScript /> once per page to load the editor bundle. Edits go
+ * through the integration's Astro route (forwarded to camomilla server-side),
+ * so the browser stays same-origin — no CORS/CSRF setup.
+ */
+import DjSuperAdmin from './DjSuperAdmin.astro'
+import { isAccessGranted } from '../utils/permissions.ts'
+import { getIntegrationOptions } from '../utils/getIntegrationOptions.ts'
+
+interface Props {
+  /** Content-block name, scoped to the current camomilla page. */
+  identifier: string
+  /** `wysiwyg` (SunEditor) or `raw` (plain text). */
+  mode?: 'wysiwyg' | 'raw'
+}
+
+const { identifier, mode = 'wysiwyg' } = Astro.props
+
+// Fallback content is the component's inner HTML — shown until an editor
+// fills the block:  <CamomillaContent identifier="hero"><p>…</p></CamomillaContent>
+const fallback = Astro.slots.has('default') ? (await Astro.slots.render('default')).trim() : ''
+
+const user = Astro.locals.camomilla?.user
+let enabled = user ? isAccessGranted(user) : false
+const currentPage = Astro.locals.camomilla?.page
+
+const lang = currentPage?.language ?? ''
+const langQuery = lang ? `?language=${encodeURIComponent(lang)}` : ''
+
+function readCookie(cookie: string, name: string): string {
+  const match = cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'))
+  return match ? decodeURIComponent(match[1]) : ''
+}
+
+// "Create once": get-or-create the block server-side (like Django's
+// filter_content) so it gets an id — then the browser edits it purely by id.
+// Only invoked for a superuser, and only for a block not yet in the page payload.
+// Seeds the fallback (inner HTML) as the block's initial content so the editor
+// loads the default on first edit instead of an empty box. Server-side the
+// seed applies on creation only, so an existing block is never overwritten.
+async function createOnce(
+  contentType: number,
+  objectId: number
+): Promise<{ id: number; content: string } | null> {
+  const { server } = getIntegrationOptions()
+  const cookie = Astro.request.headers.get('cookie') ?? ''
+  try {
+    const res = await fetch(`${server}/api/camomilla/contents/get-or-create/${langQuery}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        cookie,
+        'X-CSRFToken': readCookie(cookie, 'csrftoken')
+      },
+      body: JSON.stringify({
+        content_type: contentType,
+        object_id: objectId,
+        identifier,
+        content: fallback
+      })
+    })
+    if (res.ok) return await res.json()
+  } catch (err) {
+    console.error('[CamomillaContent] create-once failed', identifier, err)
+  }
+  return null
+}
+
+let value = fallback
+let editUrl = ''
+
+const ct = currentPage?.content_type
+const objId = currentPage?.id
+if (ct == null || objId == null) {
+  console.warn(
+    `[CamomillaContent] "${identifier}" needs a current camomilla page ` +
+      '(Astro.locals.camomilla.page) — none found.'
+  )
+  enabled = false
+} else {
+  // Existing blocks are embedded in the page-router payload with their id (no
+  // fetch). A not-yet-created block is get-or-created once, server-side, to
+  // obtain its id. Either way the browser edits purely by id.
+  let block: { id: number; content: string } | undefined = currentPage?.contents?.[identifier]
+  if (!block && enabled) {
+    block = (await createOnce(ct, objId)) ?? undefined
+  }
+  if (block) {
+    value = block.content || fallback
+    editUrl = `/api/djsuperadmin/content/${block.id}${langQuery}`
+  }
+  // else: anonymous viewing a not-yet-created block — plain default, no editor.
+}
+---
+
+<DjSuperAdmin
+  content={value}
+  getUrl={editUrl}
+  patchUrl={editUrl}
+  id={identifier}
+  mode={mode}
+  enabled={enabled}
+/>

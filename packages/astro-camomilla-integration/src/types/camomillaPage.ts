@@ -31,6 +31,7 @@ export interface CamomillaPage {
   indexable: boolean
   alternates: Record<string, string | null>
   permalink: string
+  language?: string
   related_name: string
   translations: Record<string, CamomillaPage>
   breadcrumbs: {
@@ -54,6 +55,8 @@ export interface CamomillaPage {
   template: string
   template_data: Record<string, unknown>
   ordering: number
+  content_type?: number
+  contents?: Record<string, { id: number; content: string }>
   /**
    * Timestamp at which the active language's content went / will go public.
    * ``null`` means the language has never been published. Replaced the old

@@ -1,0 +1,74 @@
+---
+/**
+ * Renders a djsuperadmin editable region so the djsuperadmin browser bundle
+ * can attach its inline editor in headless mode. Emits the same `.djsuperadmin`
+ * element the Django `{% superadmin_content %}` / `{% superadmin_raw_content %}`
+ * tags do, wrapped in our own `.djsuperadmin-content` container. The Django tag
+ * lets the bundle promote the surrounding element to `.djsuperadmin-content`;
+ * as a component we can't own that element, so we provide the wrapper here to
+ * keep the editing state scoped to the block (see the markup below).
+ *
+ * CMS-agnostic: you pass endpoints that speak djsuperadmin's contract
+ * (`GET -> {"content": ...}`, `PATCH {"content": ...}`, optional history
+ * `GET -> {"versions": [...]}`). For camomilla, use <CamomillaContent> which
+ * wires these up from a serialized Content object. Pair with
+ * <DjSuperAdminScript> (once per page) to load the bundle.
+ *
+ * `enabled` is the superuser gate: when false the content is rendered plain —
+ * no wrapper, no attributes, no editor.
+ */
+interface Props {
+  /** Current HTML value to render (and edit). */
+  content: string
+  /** Endpoint returning `{"content": ...}` on GET. */
+  getUrl: string
+  /** Endpoint accepting `PATCH {"content": ...}`. */
+  patchUrl: string
+  /** Optional endpoint returning `{"versions": [...]}` — enables the history/revert button. */
+  historyUrl?: string
+  /** `wysiwyg` (SunEditor, block `<div>`) or `raw` (plain text, inline `<span>`). */
+  mode?: 'wysiwyg' | 'raw'
+  /** Carried as `data-djsa-id`. */
+  id?: string | number
+  /** Superuser gate. When false, content is rendered plain with no editor. */
+  enabled?: boolean
+}
+
+const {
+  content,
+  getUrl,
+  patchUrl,
+  historyUrl,
+  mode = 'wysiwyg',
+  id = '',
+  enabled = true
+} = Astro.props
+
+// WYSIWYG content is block-level HTML -> <div>; raw is inline -> <span>
+// (same rule as the Django template tag, so block content isn't ejected).
+const isWysiwyg = mode !== 'raw'
+const Tag = isWysiwyg ? 'div' : 'span'
+---
+
+{
+  enabled ? (
+    // The djsuperadmin bundle promotes ``.djsuperadmin``'s PARENT to
+    // ``.djsuperadmin-content`` and stamps the editing state + toolbar on it.
+    // As a component we don't control the surrounding element, so we render
+    // our own tight wrapper — otherwise the ``djsuperadmin-editing`` outline
+    // leaks onto whatever container the author dropped this into.
+    <Tag class="djsuperadmin-content">
+      <Tag
+        class="djsuperadmin"
+        data-djsa-mode={isWysiwyg ? '1' : '0'}
+        data-djsa-id={String(id)}
+        data-djsa-getcontenturl={getUrl}
+        data-djsa-patchcontenturl={patchUrl}
+        data-djsa-historyurl={historyUrl}
+        set:html={content}
+      />
+    </Tag>
+  ) : (
+    <Fragment set:html={content} />
+  )
+}

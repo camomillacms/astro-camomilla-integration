@@ -18,7 +18,13 @@ export const optionsSchema = z.object({
   forwardedHeaders: z.array(z.string()).default([]),
   cache: cacheSchema.partial().optional(),
   debug: z.boolean().default(false),
-  enableTransitions: z.boolean().default(false)
+  enableTransitions: z.boolean().default(false),
+  staticProxy: z
+    .union([
+      z.boolean(),
+      z.object({ allow: z.array(z.string()).optional(), deny: z.array(z.string()).optional() })
+    ])
+    .default(true)
 })
 
 export type CamomillaOptions = z.infer<typeof optionsSchema>

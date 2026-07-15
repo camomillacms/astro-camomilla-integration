@@ -8,7 +8,7 @@ import {
 import { getIntegrationOptions } from '../utils/getIntegrationOptions.ts'
 
 const STATIC_ASSET_PATH_RE =
-  /^\/(favicon\.ico|robots\.txt|manifest\.json|assets\/|.*\.(png|jpg|jpeg|gif|svg|webp|css|js|woff2?|ttf|otf|mp4|webm|txt|xml|json))$/
+  /^\/(favicon\.ico|robots\.txt|manifest\.json|assets\/|static\/|.*\.(png|jpg|jpeg|gif|svg|webp|css|js|woff2?|ttf|otf|mp4|webm|txt|xml|json))$/
 
 /**
  * Turn a camomilla ``{ redirect, status }`` router body into an absolute
@@ -141,8 +141,11 @@ export const middlewarePage: MiddlewareHandler = async (
     // for already-public rows, 404 otherwise).
   }
 
+  const publicHeaders = extractForwardedHeaders(context, forwardedHeaders)
+  const sessionCookie = await context.cookies.get('sessionid')
+  if (sessionCookie) publicHeaders.Cookie = `sessionid=${sessionCookie.value}`
   const publicResp = await fetch(`${serverUrl}/api/camomilla/pages-router${context.url.pathname}`, {
-    headers: extractForwardedHeaders(context, forwardedHeaders)
+    headers: publicHeaders
   })
 
   context.locals.camomilla.response = publicResp

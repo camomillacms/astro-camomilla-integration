@@ -1,0 +1,58 @@
+---
+/**
+ * Loads the djsuperadmin browser bundle (which lazy-loads SunEditor from a CDN
+ * on first edit) plus its config globals.
+ *
+ * Drop it ONCE per page, as close to `</body>` as possible (e.g. at the end of
+ * your layout): the bundle scans for `.djsuperadmin` elements at load, so it
+ * must run after they exist.
+ *
+ * By default it is gated on the current camomilla superuser, so anonymous
+ * visitors download no editor code. The bundle is served by Django's staticfiles
+ * (djsuperadmin ships it under `static/`), same-origin via your proxy.
+ */
+import { isAccessGranted } from '../utils/permissions.ts'
+
+interface Props {
+  /** Override the superuser gate (defaults to the current camomilla user). */
+  enabled?: boolean
+  /** URL of the djsuperadmin bundle (served by Django staticfiles). */
+  bundleSrc?: string
+  /** Edit in place (true) vs modal (false). Maps to DJSUPERADMIN["INPLACE_EDIT"]. */
+  inplace?: boolean
+  /** Override the SunEditor JS/CSS URLs (empty = the bundle's CDN default). */
+  suneditorJs?: string
+  suneditorCss?: string
+  /** Media list endpoint returning `{"result": [{"src","name"}, ...]}` -> image-gallery button. */
+  imageGalleryUrl?: string
+  /** Optional image upload endpoint. */
+  imageUploadUrl?: string
+}
+
+const user = Astro.locals.camomilla?.user
+const {
+  enabled = user ? isAccessGranted(user) : false,
+  bundleSrc = '/static/djsuperadmin/djsuperadmin.bundle.js',
+  inplace = true,
+  suneditorJs = '',
+  suneditorCss = '',
+  imageGalleryUrl = '',
+  imageUploadUrl = ''
+} = Astro.props
+---
+
+{
+  enabled && (
+    <Fragment>
+      <script
+        is:inline
+        define:vars={{ inplace, suneditorJs, suneditorCss, imageGalleryUrl, imageUploadUrl }}
+      >
+        window.inplace_edit_enabled = inplace; window.djsa_suneditor_js = suneditorJs;
+        window.djsa_suneditor_css = suneditorCss; window.djsa_image_gallery_url = imageGalleryUrl;
+        window.djsa_image_upload_url = imageUploadUrl; window.djsa_logout_url = '';
+      </script>
+      <script is:inline src={bundleSrc} />
+    </Fragment>
+  )
+}
