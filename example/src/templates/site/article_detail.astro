@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../../components/SiteLayout.astro'
+import CamomillaContent from '@camomillacms/astro-integration/components/CamomillaContent.astro'
 
 /**
  * Article detail — maps to camomilla's ``website/articles/detail.html``.
@@ -39,4 +40,12 @@ const author = page?.author
     </p>
     {page?.content && <div class="article-content" set:html={page.content} />}
   </article>
+
+  {
+    /* Per-article page-scoped block — works now that Content attaches to any
+      page type (Article included) via the generic relation. */
+  }
+  <CamomillaContent identifier="article-note">
+    <p>Editable per-article note.</p>
+  </CamomillaContent>
 </SiteLayout>

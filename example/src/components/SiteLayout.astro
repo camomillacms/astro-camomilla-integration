@@ -3,6 +3,7 @@ import MainLayout from '@camomillacms/astro-integration/layouts/MainLayout.astro
 import SiteHeader from './SiteHeader.astro'
 import SiteFooter from './SiteFooter.astro'
 import PreviewBanner from './PreviewBanner.astro'
+import DjSuperAdminScript from '@camomillacms/astro-integration/components/DjSuperAdminScript.astro'
 
 /**
  * Demo-site layout. Wraps the integration's MainLayout (which handles
@@ -28,4 +29,11 @@ const lang = prefixMatch ? prefixMatch[1] : 'en'
     </div>
   </main>
   <SiteFooter />
+
+  {
+    /* Load the djsuperadmin editor once for every site page. Uses the default
+      same-origin bundleSrc (/static/djsuperadmin/djsuperadmin.bundle.js), which
+      the integration proxies to camomilla's staticfiles server-side. */
+  }
+  <DjSuperAdminScript />
 </MainLayout>

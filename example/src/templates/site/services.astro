@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../../components/SiteLayout.astro'
+import CamomillaContent from '@camomillacms/astro-integration/components/CamomillaContent.astro'
 
 /**
  * Services landing — maps to camomilla's ``website/pages/services.html``.
@@ -57,6 +58,10 @@ const children = [
   <h1>{page?.title}</h1>
   {page?.description && <p class="lead">{page.description}</p>}
   {data.intro && <p>{data.intro}</p>}
+
+  <CamomillaContent identifier="services-intro">
+    <p>Editable services intro — page-scoped inline content.</p>
+  </CamomillaContent>
 
   <div class="grid grid-2">
     {

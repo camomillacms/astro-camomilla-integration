@@ -15,6 +15,8 @@ import SiteLayout from '../../components/SiteLayout.astro'
  * ``"/about/"`` on the default route — astro doesn't have to know how
  * Django's ``i18n_patterns`` builds URLs.
  */
+import CamomillaContent from '@camomillacms/astro-integration/components/CamomillaContent.astro'
+
 const page = Astro.locals.camomilla?.page as any
 const data = page?.template_data ?? {}
 const hero = data.hero ?? {}
@@ -36,6 +38,13 @@ const testimonial = data.testimonial ?? null
       )
     }
   </section>
+
+  <CamomillaContent identifier="home-intro">
+    <p>
+      Editable homepage block — page-scoped (works on this custom HomePage model thanks to the
+      generic relation).
+    </p>
+  </CamomillaContent>
 
   {
     features.length > 0 && (

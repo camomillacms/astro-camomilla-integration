@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../../components/SiteLayout.astro'
+import CamomillaContent from '@camomillacms/astro-integration/components/CamomillaContent.astro'
 
 /**
  * Default page template — maps to camomilla's ``website/pages/default.html``.
@@ -34,6 +35,10 @@ const breadcrumbs: Array<{ permalink: string; title: string }> = page?.breadcrum
     {page?.description && <p class="lead">{page.description}</p>}
 
     {data.body && <Fragment set:html={data.body} />}
+
+    <CamomillaContent identifier="page-body">
+      <p>Editable page block — page-scoped inline content.</p>
+    </CamomillaContent>
 
     {
       data.values && data.values.length > 0 && (
