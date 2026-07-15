@@ -69,6 +69,14 @@ describe('djsuperadmin history proxy', () => {
     )
   })
 
+  it('falls back to an empty id when params.id is missing', async () => {
+    fetchSpy.mockResolvedValue(new Response('{"versions":[]}', { status: 200 }))
+    await GET(ctx({ params: {} }))
+    expect(fetchSpy.mock.calls[0][0]).toBe(
+      'http://localhost:8000/api/camomilla/contents//djsuperadmin/history/'
+    )
+  })
+
   it('passes backend error status through, defaulting content-type when absent', async () => {
     fetchSpy.mockResolvedValue(new Response(null, { status: 404 }))
     const res = await GET(ctx({ params: { id: '99' } }))
