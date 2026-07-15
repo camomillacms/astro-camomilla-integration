@@ -47,6 +47,11 @@ export const integration = defineIntegration({
             entrypoint: resolve('./api/djsuperadmin.ts'),
             prerender: false
           })
+          injectRoute({
+            pattern: '/api/djsuperadmin/content/[id]/history',
+            entrypoint: resolve('./api/djsuperadminHistory.ts'),
+            prerender: false
+          })
           if (options.staticProxy !== false) {
             injectRoute({
               pattern: '/static/[...path]',

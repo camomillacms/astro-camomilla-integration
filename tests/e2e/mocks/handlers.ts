@@ -95,6 +95,17 @@ export const handlers = [
     }
   ),
 
+  // Version history for a block — what ``/api/djsuperadmin/content/[id]/history``
+  // proxies to. Prior states, newest-first.
+  http.get(
+    'http://localhost:8000/api/camomilla/contents/:id/djsuperadmin/history/',
+    ({ params }) => {
+      return HttpResponse.json({
+        versions: [{ created_at: '2026-01-01T00:00:00', data: `<p>old block ${params.id}</p>` }]
+      })
+    }
+  ),
+
   http.get('http://localhost:8000/api/camomilla/pages-router/*', () => {
     return HttpResponse.json({
       template: 'defaults/pages/default',

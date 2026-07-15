@@ -85,6 +85,7 @@ async function createOnce(
 
 let value = fallback
 let editUrl = ''
+let historyUrl = ''
 
 const ct = currentPage?.content_type
 const objId = currentPage?.id
@@ -105,6 +106,7 @@ if (ct == null || objId == null) {
   if (block) {
     value = block.content || fallback
     editUrl = `/api/djsuperadmin/content/${block.id}${langQuery}`
+    historyUrl = `/api/djsuperadmin/content/${block.id}/history${langQuery}`
   }
   // else: anonymous viewing a not-yet-created block — plain default, no editor.
 }
@@ -114,6 +116,7 @@ if (ct == null || objId == null) {
   content={value}
   getUrl={editUrl}
   patchUrl={editUrl}
+  historyUrl={historyUrl}
   id={identifier}
   mode={mode}
   enabled={enabled}

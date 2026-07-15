@@ -105,6 +105,10 @@ is shipped (gated server-side via `isAccessGranted`). The component's inner HTML
 the fallback content, shown until an editor fills the block. Also accepts
 `mode="raw"` (plain-text).
 
+Each edit is versioned server-side: the editor's clock button lists a block's
+previous values and reverts to one with a click (history is proxied read-only
+alongside GET/PATCH, and revert is just a normal save).
+
 **Performance:** existing blocks are read from the page-router payload
 (`page.contents`) with their id, so any number of them on a page cost **zero**
 extra fetches; the browser then edits purely by id.

@@ -47,4 +47,26 @@ describe('API djsuperadmin content proxy', () => {
       expect(response.body).to.have.property('content', '<p>updated</p>')
     })
   })
+
+  it('Should fail history GET without user authentication', () => {
+    cy.request({
+      method: 'GET',
+      url: '/api/djsuperadmin/content/1/history',
+      failOnStatusCode: false
+    }).should((response) => {
+      expect(response.status).to.eq(401)
+    })
+  })
+
+  it('Should proxy history GET to camomilla with user authentication', () => {
+    cy.request({
+      method: 'GET',
+      url: '/api/djsuperadmin/content/1/history',
+      headers: AUTH
+    }).should((response) => {
+      expect(response.status).to.eq(200)
+      expect(response.body.versions).to.be.an('array')
+      expect(response.body.versions[0]).to.have.property('data')
+    })
+  })
 })
