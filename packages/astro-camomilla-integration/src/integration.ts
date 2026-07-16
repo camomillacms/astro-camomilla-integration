@@ -1,6 +1,6 @@
 import { createResolver, defineIntegration } from 'astro-integration-kit'
 import { readFileSync } from 'node:fs'
-import defaultOptions from './defaults.ts'
+import defaultOptions, { AUTOROUTING_ROUTE_PATTERN } from './defaults.ts'
 import { optionsSchema } from './types/camomillaOptions.ts'
 import { vitePluginTemplateMapper } from './vite/vite-plugin-template-mapper.ts'
 import { vitePluginCssCompiler } from './vite/vite-pugin-css-compiler.ts'
@@ -61,7 +61,7 @@ export const integration = defineIntegration({
           }
           if (options.autoRouting) {
             injectRoute({
-              pattern: '/[...path]',
+              pattern: AUTOROUTING_ROUTE_PATTERN,
               entrypoint: '@camomillacms/astro-integration/router-index.astro',
               prerender: false
             })

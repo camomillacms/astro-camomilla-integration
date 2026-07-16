@@ -105,6 +105,71 @@ describe('Cache middleware', async () => {
       throw new Error('Response is not an instance of Response')
     }
   })
+  it('Should cache html page responses but not other content types', async () => {
+    const cacheEngine = getCacheEngine({ backend: 'memory' })
+
+    const htmlCtx = {
+      locals: { camomilla: {} },
+      url: new URL('http://localhost/html-page'),
+      request: new Request('http://localhost/html-page', { headers: { 'User-Agent': 'a' } })
+    } as any
+    await middlewareCache(htmlCtx, async () => {
+      return new Response('<html>page</html>', {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' }
+      })
+    })
+    const htmlKey = buildCacheKey(htmlCtx, { varyOnHeaders: ['User-Agent'] })
+    const stored: any = await cacheEngine.get(htmlKey)
+    expect(stored?.body).toBe('<html>page</html>')
+
+    // An API (JSON) response under a different url must NOT be cached.
+    const apiCtx = {
+      locals: { camomilla: {} },
+      url: new URL('http://localhost/api-data'),
+      request: new Request('http://localhost/api-data', { headers: { 'User-Agent': 'a' } })
+    } as any
+    await middlewareCache(apiCtx, async () => {
+      return new Response('{"a":1}', {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      })
+    })
+    const apiKey = buildCacheKey(apiCtx, { varyOnHeaders: ['User-Agent'] })
+    expect(await cacheEngine.get(apiKey)).toBeUndefined()
+
+    // A response with no content-type header is not cached either.
+    const noCtCtx = {
+      locals: { camomilla: {} },
+      url: new URL('http://localhost/no-ct'),
+      request: new Request('http://localhost/no-ct', { headers: { 'User-Agent': 'a' } })
+    } as any
+    await middlewareCache(noCtCtx, async () => new Response(null, { status: 200 }))
+    const noCtKey = buildCacheKey(noCtCtx, { varyOnHeaders: ['User-Agent'] })
+    expect(await cacheEngine.get(noCtKey)).toBeUndefined()
+  })
+
+  it('Should not cache non-GET requests even for html responses', async () => {
+    const cacheEngine = getCacheEngine({ backend: 'memory' })
+    const ctx = {
+      locals: { camomilla: {} },
+      url: new URL('http://localhost/patch-page'),
+      request: new Request('http://localhost/patch-page', {
+        method: 'PATCH',
+        headers: { 'User-Agent': 'a' }
+      })
+    } as any
+    const response = await middlewareCache(ctx, async () => {
+      return new Response('<html>x</html>', {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' }
+      })
+    })
+    expect(await response.text()).toBe('<html>x</html>')
+    const key = buildCacheKey(ctx, { varyOnHeaders: ['User-Agent'] })
+    expect(await cacheEngine.get(key)).toBeUndefined()
+  })
+
   it('Should define locals set cache function', async () => {
     const ctx = {
       locals: { camomilla: {} },

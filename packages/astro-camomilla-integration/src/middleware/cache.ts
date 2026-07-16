@@ -41,7 +41,8 @@ export const middlewareCache: MiddlewareHandler = async (
 
   const response = await next()
 
-  if (ttl !== 'NEVER_CACHE') {
+  const isHtml = (response.headers.get('content-type') ?? '').includes('text/html')
+  if (ttl !== 'NEVER_CACHE' && isHtml) {
     await context.locals.camomilla.cacheStore.set<CachedResponseData>(
       cacheKey,
       await serializeResponse(response.clone()),

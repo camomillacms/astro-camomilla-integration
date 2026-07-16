@@ -6,6 +6,7 @@ import {
   type CamomillaRouterResponse
 } from '../types/camomillaPage.ts'
 import { getIntegrationOptions } from '../utils/getIntegrationOptions.ts'
+import { AUTOROUTING_ROUTE_PATTERN } from '../defaults.ts'
 
 const STATIC_ASSET_PATH_RE =
   /^\/(favicon\.ico|robots\.txt|manifest\.json|assets\/|static\/|.*\.(png|jpg|jpeg|gif|svg|webp|css|js|woff2?|ttf|otf|mp4|webm|txt|xml|json))$/
@@ -115,6 +116,14 @@ export const middlewarePage: MiddlewareHandler = async (
   const serverUrl = server
 
   if (STATIC_ASSET_PATH_RE.test(context.url.pathname)) {
+    return next()
+  }
+
+  // Only the camomilla autoRouting catch-all resolves pages from the CMS. API
+  // routes, the static proxy, and local ``src/pages`` routes render on their
+  // own — skip the pages-router round-trip (and leave ``camomilla.page`` unset)
+  // for anything the catch-all didn't match.
+  if (context.routePattern !== AUTOROUTING_ROUTE_PATTERN) {
     return next()
   }
 

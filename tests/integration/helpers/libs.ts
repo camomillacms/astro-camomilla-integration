@@ -5,7 +5,8 @@ export function createMockContext(
   headers: HeadersInit = {
     'X-Forwarded-Host': 'localhost',
     Referer: 'http://localhost:8000'
-  }
+  },
+  routePattern: string = '/[...path]'
 ) {
   const request = new Request(href, { headers })
 
@@ -18,6 +19,7 @@ export function createMockContext(
   return {
     request,
     cookies,
+    routePattern,
     url: {
       href,
       pathname,

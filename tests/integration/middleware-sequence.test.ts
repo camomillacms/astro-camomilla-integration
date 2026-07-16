@@ -111,6 +111,26 @@ describe('Middleware sequence', async () => {
     expect(headers['Referer']).toBe('http://example.com')
   })
 
+  // Only the autoRouting catch-all resolves camomilla pages. A local
+  // ``src/pages`` route (or an API route) must NOT trigger a pages-router
+  // fetch, so ``camomilla.page`` stays unset even when the CMS would answer.
+  it('Should skip the pages-router for non-autoRouting routes', async () => {
+    fetchMocker.mockIf(/^http?:\/\/localhost:8000.*$/, (req) => {
+      switch (true) {
+        case req.url.endsWith('/api/camomilla/pages-router/custom'):
+          return { status: 200, body: JSON.stringify({ is_public: true, status: 'PUB' }) }
+        case req.url.endsWith('/api/camomilla/users/current/'):
+          return { status: 401, body: JSON.stringify({ user: null }) }
+      }
+    })
+
+    const ctx = createMockContext(true, 'http://localhost:8000', '/custom', undefined, '/custom')
+    const response = await onRequest(ctx as any, async () => new Response('Next middleware called'))
+
+    expect(response instanceof Response).toBe(true)
+    expect(ctx.locals.camomilla.page).toBeFalsy()
+  })
+
   // Camomilla 6.4+: the public ``pages-router`` 404s non-public pages
   // (trashed / draft / scheduled-first-publish) server-side. The integration
   // surfaces the failure response unchanged.
