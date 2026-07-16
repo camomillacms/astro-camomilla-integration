@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.7.1...v0.8.0) (2026-07-16)
+
+### Bug Fixes
+
+- hit camomilla router only for autorouting pages and cache only html responses ([fffd91f](https://github.com/camomillacms/astro-camomilla-integration/commit/fffd91f8fbd2ec06b654baa58a00d9a73c0bd263))
+
 ## [0.7.1](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.7.0...v0.7.1) (2026-07-13)
 
 ### Bug Fixes
