@@ -24,6 +24,12 @@ export const middlewareCache: MiddlewareHandler = async (
 
   context.locals.camomilla.cacheStore = getCacheEngine(cacheConfig)
 
+  // Only safe methods are cacheable.
+  const method = context.request.method
+  if (method !== 'GET' && method !== 'HEAD') {
+    return next()
+  }
+
   const cacheKey = buildCacheKey(context, cacheConfig)
 
   const cached: CachedResponseData | undefined =
