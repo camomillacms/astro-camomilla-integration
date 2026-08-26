@@ -1,0 +1,28 @@
+---
+import { templates } from 'virtual:camomilla-templates-map'
+import { loadTemplate } from '../utils/loadTemplate'
+export { getStaticPaths } from '../utils/staticPaths.ts'
+
+export const prerender = true
+
+const { page } = Astro.props
+
+// Rebuild the same ``locals.camomilla`` shape the SSR middleware produces, so
+// every template / layout / component reads it unchanged. No middleware runs
+// in static mode; ``cache`` is a no-op (there is no runtime cache at build).
+Astro.locals.camomilla = {
+  response: new Response(null, { status: 200 }),
+  page,
+  template_file: page?.template_file ?? null,
+  Template: null,
+  user: null,
+  error: null,
+  cache: () => {},
+  cacheStore: null
+}
+
+const Template = await loadTemplate(page?.template_file, templates)
+Astro.locals.camomilla.Template = Template
+---
+
+{Template && <Template />}

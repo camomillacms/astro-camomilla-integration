@@ -13,6 +13,7 @@ export const integration = defineIntegration({
     return {
       hooks: {
         'astro:config:setup': ({ addMiddleware, injectRoute, updateConfig }: any) => {
+          const isStatic = options.mode === 'static'
           updateConfig({
             vite: {
               define: {
@@ -30,40 +31,48 @@ export const integration = defineIntegration({
               }
             }
           })
-          addMiddleware({
-            entrypoint: '@camomillacms/astro-integration/middleware',
-            order: 'pre'
-          })
-          injectRoute({
-            pattern: '/api/cache-flush',
-            entrypoint: resolve('./api/cacheFlush.ts')
-          })
-          injectRoute({
-            pattern: '/api/templates',
-            entrypoint: resolve('./api/templates.ts')
-          })
-          injectRoute({
-            pattern: '/api/djsuperadmin/content/[id]',
-            entrypoint: resolve('./api/djsuperadmin.ts'),
-            prerender: false
-          })
-          injectRoute({
-            pattern: '/api/djsuperadmin/content/[id]/history',
-            entrypoint: resolve('./api/djsuperadminHistory.ts'),
-            prerender: false
-          })
-          if (options.staticProxy !== false) {
+          // Static mode prerenders public HTML for a CDN — there is no
+          // runtime, so the SSR middleware and the SSR-only API endpoints
+          // (cache, inline-edit proxy, media proxy) are skipped. They live on
+          // the separate mode:'server' preview instance instead.
+          if (!isStatic) {
+            addMiddleware({
+              entrypoint: '@camomillacms/astro-integration/middleware',
+              order: 'pre'
+            })
             injectRoute({
-              pattern: '/static/[...path]',
-              entrypoint: resolve('./api/staticProxy.ts'),
+              pattern: '/api/cache-flush',
+              entrypoint: resolve('./api/cacheFlush.ts')
+            })
+            injectRoute({
+              pattern: '/api/templates',
+              entrypoint: resolve('./api/templates.ts')
+            })
+            injectRoute({
+              pattern: '/api/djsuperadmin/content/[id]',
+              entrypoint: resolve('./api/djsuperadmin.ts'),
               prerender: false
             })
+            injectRoute({
+              pattern: '/api/djsuperadmin/content/[id]/history',
+              entrypoint: resolve('./api/djsuperadminHistory.ts'),
+              prerender: false
+            })
+            if (options.staticProxy !== false) {
+              injectRoute({
+                pattern: '/static/[...path]',
+                entrypoint: resolve('./api/staticProxy.ts'),
+                prerender: false
+              })
+            }
           }
           if (options.autoRouting) {
             injectRoute({
               pattern: AUTOROUTING_ROUTE_PATTERN,
-              entrypoint: '@camomillacms/astro-integration/router-index.astro',
-              prerender: false
+              entrypoint: isStatic
+                ? '@camomillacms/astro-integration/router-static.astro'
+                : '@camomillacms/astro-integration/router-index.astro',
+              prerender: isStatic
             })
           }
         },

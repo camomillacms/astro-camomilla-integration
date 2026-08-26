@@ -14,6 +14,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./router-index.astro": "./src/router/index.astro",
+    "./router-static.astro": "./src/router/static.astro",
+    "./bin/incremental-build.mjs": "./bin/incremental-build.mjs",
     "./middleware": "./src/middleware/index.ts",
     "./layouts/MainLayout.astro": "./src/layouts/MainLayout.astro",
     "./components/ErrorRenderer.astro": "./src/components/ErrorRenderer.astro",
