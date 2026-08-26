@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.7.1...v0.8.0) (2026-07-16)
+
+### Bug Fixes
+
+- ensure only safe methods are cacheable in middlewareCache ([8a03d3e](https://github.com/camomillacms/astro-camomilla-integration/commit/8a03d3e5cecf620e47e1fbf1ae24d4919c82343d))
+- hit camomilla router only for autorouting pages and cache only html responses ([fffd91f](https://github.com/camomillacms/astro-camomilla-integration/commit/fffd91f8fbd2ec06b654baa58a00d9a73c0bd263))
+
+### Features
+
+- add inline editing support with djsuperadmin and static proxy configuration ([4f365ea](https://github.com/camomillacms/astro-camomilla-integration/commit/4f365eaac5246dd5d69dd776f8fe26d0a38d0bd0))
+- add version history support for djsuperadmin with API proxy and frontend integration ([f636eff](https://github.com/camomillacms/astro-camomilla-integration/commit/f636eff2e222bcf6b81f07614210fe11cba4b35b))
+
 ## [0.7.1](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.7.0...v0.7.1) (2026-07-13)
 
 ### Bug Fixes
