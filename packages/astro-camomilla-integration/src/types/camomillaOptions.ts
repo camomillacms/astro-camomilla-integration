@@ -12,6 +12,11 @@ export type CacheConfig = z.infer<typeof cacheSchema>
 
 export const optionsSchema = z.object({
   server: z.string(),
+  // 'server' (default): every page resolves on-demand via SSR middleware —
+  // today's behavior. 'static': the autoRouting catch-all is prerendered at
+  // build time (getStaticPaths + the incremental-build CLI) for a JAMStack /
+  // CDN deploy. Editor preview stays on a separate mode:'server' instance.
+  mode: z.enum(['server', 'static']).default('server'),
   autoRouting: z.boolean().default(true),
   templatesIndex: z.string().default('./src/templates/index.js'),
   stylesIndex: z.string().optional(),
