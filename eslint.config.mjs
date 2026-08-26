@@ -18,6 +18,16 @@ export default defineConfig([
   ...tseslint.configs.recommended,
   ...eslintPluginAstro.configs.recommended,
   {
+    // astro-eslint-parser parses the frontmatter with espree unless told otherwise
+    files: ["**/*.astro"],
+    languageOptions: { parserOptions: { parser: tseslint.parser } },
+  },
+  {
+    // variables injected by `define:vars` are undeclared in the extracted script
+    files: ["**/*.astro/*.js"],
+    rules: { "no-undef": "off" },
+  },
+  {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-empty-object-type": "off",
@@ -26,5 +36,3 @@ export default defineConfig([
     },
   },
 ]);
-
-
