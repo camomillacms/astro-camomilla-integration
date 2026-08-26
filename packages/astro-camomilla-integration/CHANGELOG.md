@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.8.0...v0.9.0) (2026-08-26)
+
+### Features
+
+- added static build capability ([#22](https://github.com/camomillacms/astro-camomilla-integration/issues/22)) ([362d0ca](https://github.com/camomillacms/astro-camomilla-integration/commit/362d0cad8a04fb7a282f3cc71e917f3fddf20786))
+
 # [0.8.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.7.1...v0.8.0) (2026-07-16)
 
 ### Bug Fixes
