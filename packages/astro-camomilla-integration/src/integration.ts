@@ -1,88 +1,90 @@
-import { createResolver, defineIntegration } from 'astro-integration-kit'
+import type { AstroIntegration } from 'astro'
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import defaultOptions, { AUTOROUTING_ROUTE_PATTERN } from './defaults.ts'
 import { optionsSchema } from './types/camomillaOptions.ts'
 import { vitePluginTemplateMapper } from './vite/vite-plugin-template-mapper.ts'
 import { vitePluginCssCompiler } from './vite/vite-pugin-css-compiler.ts'
 
-export const integration = defineIntegration({
-  name: 'astro-camomilla-integration',
-  optionsSchema,
-  setup({ options }): { hooks: any } {
-    const { resolve } = createResolver(import.meta.url)
-    return {
-      hooks: {
-        'astro:config:setup': ({ addMiddleware, injectRoute, updateConfig }: any) => {
-          const isStatic = options.mode === 'static'
-          updateConfig({
-            vite: {
-              define: {
-                'import.meta.env.CAMOMILLA_INTEGRATION_OPTIONS': {
-                  ...options,
-                  ...defaultOptions
-                }
-              },
-              plugins: [
-                vitePluginTemplateMapper(options.templatesIndex),
-                vitePluginCssCompiler(options.stylesIndex)
-              ],
-              build: {
-                cssCodeSplit: false
+// ponytail: this replaces astro-integration-kit's defineIntegration/createResolver.
+// The kit peers astro <=6, and these two lines were all we ever used of it.
+const resolve = (path: string) => fileURLToPath(new URL(path, import.meta.url))
+
+export const integration = (userOptions: unknown): AstroIntegration => {
+  const options = optionsSchema.parse(userOptions)
+  return {
+    name: 'astro-camomilla-integration',
+    hooks: {
+      'astro:config:setup': ({ addMiddleware, injectRoute, updateConfig }: any) => {
+        const isStatic = options.mode === 'static'
+        updateConfig({
+          vite: {
+            define: {
+              'import.meta.env.CAMOMILLA_INTEGRATION_OPTIONS': {
+                ...options,
+                ...defaultOptions
               }
+            },
+            plugins: [
+              vitePluginTemplateMapper(options.templatesIndex),
+              vitePluginCssCompiler(options.stylesIndex)
+            ],
+            build: {
+              cssCodeSplit: false
             }
+          }
+        })
+        // Static mode prerenders public HTML for a CDN — there is no
+        // runtime, so the SSR middleware and the SSR-only API endpoints
+        // (cache, inline-edit proxy, media proxy) are skipped. They live on
+        // the separate mode:'server' preview instance instead.
+        if (!isStatic) {
+          addMiddleware({
+            entrypoint: '@camomillacms/astro-integration/middleware',
+            order: 'pre'
           })
-          // Static mode prerenders public HTML for a CDN — there is no
-          // runtime, so the SSR middleware and the SSR-only API endpoints
-          // (cache, inline-edit proxy, media proxy) are skipped. They live on
-          // the separate mode:'server' preview instance instead.
-          if (!isStatic) {
-            addMiddleware({
-              entrypoint: '@camomillacms/astro-integration/middleware',
-              order: 'pre'
-            })
+          injectRoute({
+            pattern: '/api/cache-flush',
+            entrypoint: resolve('./api/cacheFlush.ts')
+          })
+          injectRoute({
+            pattern: '/api/templates',
+            entrypoint: resolve('./api/templates.ts')
+          })
+          injectRoute({
+            pattern: '/api/djsuperadmin/content/[id]',
+            entrypoint: resolve('./api/djsuperadmin.ts'),
+            prerender: false
+          })
+          injectRoute({
+            pattern: '/api/djsuperadmin/content/[id]/history',
+            entrypoint: resolve('./api/djsuperadminHistory.ts'),
+            prerender: false
+          })
+          if (options.staticProxy !== false) {
             injectRoute({
-              pattern: '/api/cache-flush',
-              entrypoint: resolve('./api/cacheFlush.ts')
-            })
-            injectRoute({
-              pattern: '/api/templates',
-              entrypoint: resolve('./api/templates.ts')
-            })
-            injectRoute({
-              pattern: '/api/djsuperadmin/content/[id]',
-              entrypoint: resolve('./api/djsuperadmin.ts'),
+              pattern: '/static/[...path]',
+              entrypoint: resolve('./api/staticProxy.ts'),
               prerender: false
             })
-            injectRoute({
-              pattern: '/api/djsuperadmin/content/[id]/history',
-              entrypoint: resolve('./api/djsuperadminHistory.ts'),
-              prerender: false
-            })
-            if (options.staticProxy !== false) {
-              injectRoute({
-                pattern: '/static/[...path]',
-                entrypoint: resolve('./api/staticProxy.ts'),
-                prerender: false
-              })
-            }
           }
-          if (options.autoRouting) {
-            injectRoute({
-              pattern: AUTOROUTING_ROUTE_PATTERN,
-              entrypoint: isStatic
-                ? '@camomillacms/astro-integration/router-static.astro'
-                : '@camomillacms/astro-integration/router-index.astro',
-              prerender: isStatic
-            })
-          }
-        },
-        'astro:config:done': (params: any) => {
-          params.injectTypes({
-            filename: 'camomilla-integration.d.ts',
-            content: readFileSync(resolve('./env.d.ts'), 'utf8')
+        }
+        if (options.autoRouting) {
+          injectRoute({
+            pattern: AUTOROUTING_ROUTE_PATTERN,
+            entrypoint: isStatic
+              ? '@camomillacms/astro-integration/router-static.astro'
+              : '@camomillacms/astro-integration/router-index.astro',
+            prerender: isStatic
           })
         }
+      },
+      'astro:config:done': (params: any) => {
+        params.injectTypes({
+          filename: 'camomilla-integration.d.ts',
+          content: readFileSync(resolve('./env.d.ts'), 'utf8')
+        })
       }
     }
   }
-})
+}

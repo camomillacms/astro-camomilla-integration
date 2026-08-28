@@ -1,17 +1,26 @@
-import type { APIContext } from 'astro'
 import { extractForwardedHeaders } from './headers.ts'
 import { getIntegrationOptions } from './getIntegrationOptions.ts'
 import type { CamomillaMenu } from '../types/camomillaMenu.ts'
+
+// Callers pass either an ``APIContext`` (endpoints, middleware) or the ``Astro``
+// global (components). Those two types differ, and ``AstroCookies`` is a class
+// with private fields — so naming astro's types here makes the helper reject a
+// caller whose astro resolves to a different copy. Ask only for what is used.
+type MenuContext = {
+  cookies: { get(key: string): { value: string } | undefined }
+  url: URL
+  request: Request
+}
 
 /**
  * Per-request memo: the same render often asks for the same menu more
  * than once (e.g. header + footer + a sidebar). Keyed by the APIContext
  * so it scopes to a single request and gets garbage-collected with it.
  */
-const REQUEST_CACHE = new WeakMap<APIContext, Map<string, CamomillaMenu | null>>()
+const REQUEST_CACHE = new WeakMap<MenuContext, Map<string, CamomillaMenu | null>>()
 
 async function buildAuthHeaders(
-  context: APIContext,
+  context: MenuContext,
   forwardedHeaders: string[]
 ): Promise<Record<string, string>> {
   const headers: Record<string, string> = extractForwardedHeaders(context, forwardedHeaders)
@@ -44,7 +53,7 @@ async function buildAuthHeaders(
  * Returns ``null`` on any failure path (auth denied, missing key, network
  * error). Callers should render gracefully — usually "no menu shown".
  */
-export async function fetchMenu(key: string, context: APIContext): Promise<CamomillaMenu | null> {
+export async function fetchMenu(key: string, context: MenuContext): Promise<CamomillaMenu | null> {
   let cache = REQUEST_CACHE.get(context)
   if (!cache) {
     cache = new Map()

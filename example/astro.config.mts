@@ -1,7 +1,5 @@
 import node from "@astrojs/node";
 import vue from "@astrojs/vue";
-import { createResolver } from "astro-integration-kit";
-import { hmrIntegration } from "astro-integration-kit/dev";
 import { defineConfig } from "astro/config";
 import { mockServer } from '../tests/e2e/mocks/node.ts';
 
@@ -25,11 +23,6 @@ export default defineConfig({
       enableTransitions: false
     }),
     vue({ appEntrypoint: "./src/_app.js" }),
-    hmrIntegration({
-      directory: createResolver(import.meta.url).resolve(
-        "../packages/astro-camomilla-integration"
-      ),
-    }),
     react(),
   ],
   output: "server",

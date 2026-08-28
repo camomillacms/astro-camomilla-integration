@@ -16,7 +16,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x, 24.x]
+        # astro 7 requires node >=22.12
+        node-version: [22.x, 24.x]
 
     services:
       redis:
