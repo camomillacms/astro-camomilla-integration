@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.9.0...v0.10.0) (2026-08-28)
+
+### Features
+
+- add compatibility with astro 7 ([eded752](https://github.com/camomillacms/astro-camomilla-integration/commit/eded752da29744a17df6bef25961e0cf0a261369))
+
 # [0.9.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.8.0...v0.9.0) (2026-08-26)
 
 ### Features
