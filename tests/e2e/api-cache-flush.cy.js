@@ -28,6 +28,11 @@ describe('API template', () => {
     cy.request({
       method: 'POST',
       url: '/api/cache-flush',
+      // Astro's checkOrigin rejects a cross-origin POST that carries no
+      // content-type with a 403 before any route runs, and ``cy.request``
+      // sends no Origin. Real callers post JSON, like the authenticated case
+      // below — send it here too so this asserts our auth check, not astro's.
+      headers: { 'Content-Type': 'application/json' },
       failOnStatusCode: false
     }).should((response) => {
       expect(response.status).to.eq(401)
