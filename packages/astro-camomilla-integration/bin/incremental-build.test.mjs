@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** Self-check for the incremental-build logic. Run: `node bin/incremental-build.test.mjs`. */
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -164,4 +165,31 @@ assert.equal(!!decideFull(null, null, null, false), true)
   fs.rmSync(dir, { recursive: true, force: true })
 }
 
-console.log('ok — incremental-build logic (pure + deploy fs + events)')
+// The CLI guard must survive being invoked through a symlink: that is how pnpm
+// installs this package (node_modules/<pkg> → node_modules/.pnpm/…), and a
+// guard that fails there makes `pnpm generate` exit 0 having built nothing.
+{
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'camomilla-cli-'))
+  const real = path.join(dir, 'real.mjs')
+  const link = path.join(dir, 'link.mjs')
+  // Mirrors the guard in incremental-build.mjs; running it through the symlink
+  // must report the same answer as running the file directly.
+  fs.writeFileSync(
+    real,
+    [
+      "import fs from 'node:fs'",
+      "import { pathToFileURL } from 'node:url'",
+      'const ran = import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href',
+      'console.log(ran ? "RAN" : "SKIPPED")'
+    ].join('\n')
+  )
+  const run = (entry) => execFileSync(process.execPath, [entry], { encoding: 'utf8' }).trim()
+
+  fs.symlinkSync(real, link)
+  assert.equal(run(real), 'RAN', 'guard fires when invoked directly')
+  assert.equal(run(link), 'RAN', 'guard fires when invoked through a symlink (pnpm layout)')
+
+  fs.rmSync(dir, { recursive: true, force: true })
+}
+
+console.log('ok — incremental-build logic (pure + deploy fs + events + cli guard)')

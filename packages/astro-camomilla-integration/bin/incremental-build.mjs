@@ -24,6 +24,7 @@ import { execSync, spawnSync } from 'node:child_process'
 import { createHash, randomUUID } from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const STATE_FILE = '.camomilla-build-state.json'
 
@@ -504,7 +505,22 @@ async function main() {
 }
 
 // Run only as a CLI, not when imported by the test.
-if (import.meta.url === `file://${process.argv[1]}`) {
+//
+// Both sides must be realpaths: node resolves `import.meta.url` through
+// symlinks but leaves `process.argv[1]` as typed, so under pnpm — where
+// node_modules/<pkg> links into node_modules/.pnpm/ — the naive
+// `file://${process.argv[1]}` never matches and the CLI exits 0 having done
+// nothing at all. `pathToFileURL` also encodes spaces, which the template
+// literal did not.
+const invokedAsCli = (() => {
+  try {
+    return import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href
+  } catch {
+    return false
+  }
+})()
+
+if (invokedAsCli) {
   // Exactly one terminal event per run, whatever happens. `stopBuild` in the
   // backoffice signals the process group, so the signal path is reachable; the
   // exit hook catches anything that bypasses main()'s catch. A log file with no
