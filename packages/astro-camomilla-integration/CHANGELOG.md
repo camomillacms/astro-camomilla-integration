@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.10.0...v0.10.1) (2026-08-31)
+
+### Bug Fixes
+
+- fix incremental build relative path ([adbea96](https://github.com/camomillacms/astro-camomilla-integration/commit/adbea96deae15d86ab7ccd04ad513714cf316d41))
+
 # [0.10.0](https://github.com/camomillacms/astro-camomilla-integration/compare/v0.9.0...v0.10.0) (2026-08-28)
 
 ### Features
