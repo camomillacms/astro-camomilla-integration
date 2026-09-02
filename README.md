@@ -38,6 +38,7 @@ export default {
   integrations: [
     camomilla({
       server: "http://localhost:8000", // Your Camomilla CMS server URL
+      mode: "server", // 'server' (default): SSR on demand. 'static': prerender the autoRouting catch-all for a CDN, see Static / JAMStack mode
       autoRouting: true, // If enabled, the integration will automatically create routes for your pages based on the Camomilla CMS api response.
       templatesIndex: "./src/templates/index.js", // Default is ./src/templates/index.js
       stylesIndex: "/src/styles/main.scss", // Can be undefined. Can manage only css or scss
@@ -65,7 +66,8 @@ Remember to replace the `server` option with the URL of your Camomilla CMS serve
 > Remember to replace the `server` option with the URL of your Camomilla CMS server.
 
 > [!WARNING]  
-> Camomilla Integration for now it's built only for SSR mode. Remember to set the `output` option to `server` and the `adapter` option to `node`.
+> In the default `mode: 'server'`, set the `output` option to `server` and the `adapter` option to `node`.
+> For `mode: 'static'` see [Static / JAMStack mode](#static--jamstack-mode) below: no adapter or runtime is required, but the cache, inline editing (djsuperadmin) and the `/static/` proxy are unavailable and must live on a separate `mode: 'server'` preview instance.
 
 ## Templates
 
@@ -261,6 +263,58 @@ For example, if you set `varyOnHeaders: ["Cookie", "User-Agent"]`, the cache wil
 
 > [!NOTE]
 > The `varyOnHeaders` option is useful to cache different responses for different users, for example, to cache the response for authenticated and unauthenticated users separately.
+
+## Static / JAMStack mode
+
+The `mode` option selects how pages are served.
+With the default `mode: 'server'` every request is resolved on demand by the SSR middleware.
+With `mode: 'static'` the `autoRouting` catch-all is prerendered at build time, so the build output is plain HTML that any CDN or static web server can serve, with no adapter and no Node runtime.
+
+```javascript
+camomilla({
+  server: "http://localhost:8000",
+  mode: "static"
+})
+```
+
+Static mode has no runtime, so everything that needs one is not registered:
+
+- the SSR middleware
+- the `/api/cache-flush` and `/api/templates` endpoints
+- the djsuperadmin proxy routes (`/api/djsuperadmin/content/[id]` and its `/history`)
+- the `/static/[...path]` proxy
+
+The `cache` option is unused as well, since there is no response to cache.
+Inline editing and preview stay on a separate `mode: 'server'` instance pointed at the same Camomilla CMS server: editors work there, and the static site is rebuilt from the published content.
+
+### Incremental build
+
+Static builds are driven by the `incremental-build` CLI, exposed as the `./bin/incremental-build.mjs` export of the package:
+
+```bash
+node node_modules/@camomillacms/astro-integration/bin/incremental-build.mjs
+```
+
+Pass `--full` to force a rebuild of every page. Everything else is configured by environment variables:
+
+| Variable | Default | Description |
+|---|---|---|
+| `CAMOMILLA_SERVER` | — | The Camomilla CMS base URL. Required. |
+| `CAMOMILLA_DIST_DIR` | `dist` | Astro build output directory. |
+| `CAMOMILLA_PUBLISH_DIR` | `dist-published` | The published tree that is actually served. |
+| `CAMOMILLA_DEPLOY_TARGET` | `volume` | `volume` (nginx serves the tree directly) or `external` (the tree is pushed to a remote CDN). |
+| `CAMOMILLA_BUILD_TOKEN` | — | Camomilla auth token, needed to materialise due scheduled publishes before the build. |
+| `CAMOMILLA_DEPLOY_SYNC_CMD` | — | Command that pushes the published tree. `external` target only. |
+| `CAMOMILLA_DEPLOY_PURGE_CMD` | — | Command that purges the changed paths on the CDN. `external` target only. |
+| `CAMOMILLA_LOG_DIR` | `.camomilla-builds` | Where the per-run build logs are written. |
+
+The rebuild authority is the per-URL content hash, never a timestamp: an inline edit that bumps no page timestamp still changes the hash, and a page whose hash is unchanged is not rebuilt.
+A changed frontend fingerprint (git HEAD plus the lockfile) or a changed Camomilla epoch (menus, global content) forces a full rebuild instead.
+
+Redirects are written into the published tree: `redirects.map` (an nginx `map` fragment to `include`) for the `volume` target, `_redirects` (Netlify/Cloudflare style) for `external`.
+
+> [!IMPORTANT]  
+> Static mode requires a Camomilla CMS server exposing the `pages-router/changes` and `pages-router/publish-due` endpoints.
 
 ## Development
 

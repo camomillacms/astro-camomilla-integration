@@ -20,6 +20,8 @@ Given an Astro project you need to install this project as a dependency.
 npm add @camomillacms/astro-integration
 ```
 
+Astro 5, 6 or 7 (peer range `^5.1.3 || ^6.0.0 || ^7.0.0`). Astro 7 requires Node >= 22.12; the package is tested on Node 22 and 24.
+
 Then you need to add the integration to your `astro.config.mjs` file.
 
 ```javascript
@@ -46,7 +48,8 @@ Remember to replace the `server` option with the URL of your Camomilla CMS serve
 > Remember to replace the `server` option with the URL of your Camomilla CMS server.
 
 > [!WARNING]  
-> Camomilla Integration for now it's built only for SSR mode. Remember to set the `output` option to `server` and the `adapter` option to `node`.
+> In the default `mode: 'server'`, set the `output` option to `server` and the `adapter` option to `node`.
+> For `mode: 'static'` the `autoRouting` catch-all is prerendered at build time by the `incremental-build` CLI, so no adapter or runtime is required, but the cache, inline editing (djsuperadmin) and the `/static/` proxy are unavailable and must live on a separate `mode: 'server'` instance. See [Static / JAMStack mode](https://github.com/camomillacms/astro-camomilla-integration#static--jamstack-mode).
 
 
 ## Templates
